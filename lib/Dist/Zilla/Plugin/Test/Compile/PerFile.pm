@@ -51,7 +51,7 @@ That may be fine for some people, but this approach has several fundamental limi
 
 =item 4. This approach means C<prove -j> will have no impact.
 
-=item 5. This approach means other features of C<prove> such as the C<--state=slow>
+=item 5. This approach inhibits other features of C<prove> such as the C<--state=slow>
 
 =back
 
@@ -318,7 +318,7 @@ I<If not specified>, a custom one is autovivified, and matches only C<*.pm> in C
 
 =attr C<path_translator>
 
-I<optional> B<<Str>>
+I<optional> B<< C<Str> >>
 
 A Name of a routine to translate source paths ( i.e: Paths to modules/scripts that are to be compiled )
 into test file names.
