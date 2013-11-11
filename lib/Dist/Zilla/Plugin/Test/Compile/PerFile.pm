@@ -30,6 +30,9 @@ our %path_translators = (
     $module =~ s/[^-\p{PosixAlnum}_]+/_/g;
     return $module;
   },
+  mimic_source => sub {
+    return $_[0];
+  }
 );
 
 our %templates = ();
@@ -78,7 +81,7 @@ sub _build_prefix {
 
 sub _build_path_translator {
   my ($self) = @_;
-  return 'base64_filter';
+  return 'mimic_source';
 }
 
 sub _build__path_translator {
