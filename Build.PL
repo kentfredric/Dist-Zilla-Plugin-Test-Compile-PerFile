@@ -23,6 +23,7 @@ my %module_build_args = (
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
+    "Dist::Zilla::Role::FileGatherer" => 0,
     "File::ShareDir" => 0,
     "Moose" => 0,
     "Moose::Util::TypeConstraints" => 0,

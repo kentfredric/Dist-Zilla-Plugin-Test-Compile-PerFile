@@ -13,6 +13,8 @@ BEGIN {
 
 use Moose;
 
+with 'Dist::Zilla::Role::FileGatherer';
+
 
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
@@ -58,6 +60,10 @@ sub _build__module_translator {
     return $module_translators{$translator};
 }
 
+
+sub gather_files {
+
+}
 __PACKAGE__->meta->make_immutable;
 no Moose;
 
