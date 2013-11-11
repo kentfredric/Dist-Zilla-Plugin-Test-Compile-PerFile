@@ -204,7 +204,12 @@ sub _build__test_template_content {
 
 sub _build_file {
   my ($self) = @_;
-  return [ map { $_->name } @{ $self->_found_files } ];
+  my $skiplist = {};
+  for my $skip ( @{ $self->skip } ) {
+    $skiplist->{$skip} = 1;
+  }
+
+  return [ grep { not exists $skiplist->{$_} } map { $_->name } @{ $self->_found_files } ];
 }
 sub _build_skip { 
     return [];
