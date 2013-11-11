@@ -405,7 +405,7 @@ x_Dist_Zilla:
           test_template: 01-basic.t.tpl
           xt_mode: ~
       name: Test::Compile::PerFile
-      version: ~
+      version: 0.001000
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
