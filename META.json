@@ -557,12 +557,13 @@
                   ],
                   "path_translator" : "base64_filter",
                   "prefix" : "t/00-compile",
+                  "skip" : [],
                   "test_template" : "01-basic.t.tpl",
                   "xt_mode" : null
                }
             },
             "name" : "Test::Compile::PerFile",
-            "version" : "0.001000"
+            "version" : null
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",

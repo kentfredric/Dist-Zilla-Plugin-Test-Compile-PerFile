@@ -126,10 +126,10 @@ sub gather_files {
   }
   my $skiplist = {};
   for my $skip ( @{ $self->skip } ) {
-    $skiplist{$skip} = 1;
+    $skiplist->{$skip} = 1;
   }
   for my $file ( @{ $self->file } ) {
-    if ( exists $skiplist->{$skip} ) {
+    if ( exists $skiplist->{$file} ) {
       $self->log_debug("Skipping compile test generation for $file");
       next;
     }
@@ -206,7 +206,9 @@ sub _build_file {
   my ($self) = @_;
   return [ map { $_->name } @{ $self->_found_files } ];
 }
-
+sub _build_skip { 
+    return [];
+}
 sub _build__finder_objects {
   my ($self) = @_;
   if ( $self->has_finder ) {
