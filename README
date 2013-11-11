@@ -5,6 +5,10 @@ NAME
 VERSION
     version 0.001000
 
+SYNOPSIS
+        ; in dist.ini
+        [Test::Compile::PerFile]
+
 DESCRIPTION
     This module is inspired by its earlier sibling "[Test::Compile]".
 

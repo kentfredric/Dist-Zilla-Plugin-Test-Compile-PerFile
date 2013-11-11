@@ -21,9 +21,14 @@ use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
 
-has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
-has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
-
+## 
+#
+# This really example code, because this notation is so unrecommended, as Colons in file names 
+# are highly non-portable.
+#
+# Edit this to = 1 if you're 100% serious you want this.
+#
+##
 
 my $WANT_MODULE_NAMES = 0;
 
@@ -79,10 +84,54 @@ around mvp_aliases => sub {
   return $hash;
 };
 
+has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
+has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
 has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
 has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
+
+sub gather_files {
+  my ($self) = @_;
+  require Dist::Zilla::File::FromCode;
+
+  my $prefix = $self->prefix;
+  $prefix =~ s{/?\z}{/}msx;
+
+  my $translator = $self->_path_translator;
+
+  my $template;
+
+  if ( not @{ $self->file } ) {
+    $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
+    return;
+  }
+  for my $file ( @{ $self->file } ) {
+    my $name = $prefix . $translator->($file) . '.t';
+    $self->log_debug("Adding $name for $file");
+    $self->add_file(
+      Dist::Zilla::File::FromCode->new(
+        name             => $name,
+        code_return_type => 'text',
+        code             => sub {
+          $template = $self->_test_template_content if not defined $template;
+          return $self->fill_in_string(
+            $template,
+            {
+              file              => $file,
+              plugin_module     => $self->meta->name,
+              plugin_name       => $self->plugin_name,
+              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
+              test_more_version => '0.89',
+            }
+          );
+        }
+      )
+    );
+  }
+
+}
+
 has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
 has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
@@ -130,47 +179,6 @@ sub _build__test_template_content {
 sub _build_file {
   my ($self) = @_;
   return [ map { $_->name } @{ $self->_found_files } ];
-}
-
-sub gather_files {
-  my ($self) = @_;
-  require Dist::Zilla::File::FromCode;
-
-  my $prefix = $self->prefix;
-  $prefix =~ s{/?\z}{/}msx;
-
-  my $translator = $self->_path_translator;
-
-  my $template;
-
-  if ( not @{ $self->file } ) {
-    $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
-    return;
-  }
-  for my $file ( @{ $self->file } ) {
-    my $name = $prefix . $translator->($file) . '.t';
-    $self->log_debug("Adding $name for $file");
-    $self->add_file(
-      Dist::Zilla::File::FromCode->new(
-        name             => $name,
-        code_return_type => 'text',
-        code             => sub {
-          $template = $self->_test_template_content if not defined $template;
-          return $self->fill_in_string(
-            $template,
-            {
-              file              => $file,
-              plugin_module     => $self->meta->name,
-              plugin_name       => $self->plugin_name,
-              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
-              test_more_version => '0.89',
-            }
-          );
-        }
-      )
-    );
-  }
-
 }
 
 sub _build__finder_objects {
@@ -248,6 +256,11 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 =head1 VERSION
 
 version 0.001000
+
+=head1 SYNOPSIS
+
+    ; in dist.ini
+    [Test::Compile::PerFile]
 
 =head1 DESCRIPTION
 
@@ -380,15 +393,6 @@ Though, comparing compile tests alone:
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
 Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
-
-=begin comment
-
-This really example code, because this notation is so unrecommended, as Colons in file names 
-are highly non-portable.
-
-Edit this to = 1 if you're 100% serious you want this.
-
-=end comment
 
 =head1 AUTHOR
 
