@@ -119,7 +119,7 @@ sub gather_files {
 
     for my $file ( @{ $self->file } ) {
         my $name = $prefix . $translator->($file) . '.t';
-
+        $self->log_debug("Adding $name for $file");
         $self->add_file(Dist::Zilla::File::FromCode->new(
             name => $name,
             code_return_type => 'text',
