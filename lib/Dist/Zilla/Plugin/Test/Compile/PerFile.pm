@@ -61,12 +61,11 @@ if (0) {
 our %templates = ();
 
 {
-  my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+  my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerFile');
   warn "Dist dir is $dist_dir";
   for my $i (@INC){ 
       *STDERR->printf("\e[31m%s\e[0m\n", $i);
   }
-  system('bash');
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
     next if $file =~ /\A\./msx;    # Skip hidden files
