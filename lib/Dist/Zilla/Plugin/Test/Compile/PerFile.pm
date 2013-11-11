@@ -22,11 +22,11 @@ This module is inspired by its earlier sibling L<< C<[Test::Compile]>|Dist::Zill
 Test::Compile is awesome, however, in the process of its development, we discovered it might be useful
 to run compilation tests in parallel.
 
-This lead to the realisation that implementing said functions are kinda messy.
+This lead to the realization that implementing said functions are kinda messy.
 
-However, a further realisation is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
+However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
 
-And this lead to the realisation that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
+And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
 
 Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy parallelism-induced bugs )
 
@@ -39,7 +39,7 @@ So, here is the Test::Compile model based on how development is currently procee
      |
      \ ----- 01_basic.t
 
-That may be fine for some people, but this approach has several fundemental limits:
+That may be fine for some people, but this approach has several fundamental limits:
 
 =over 4
 
@@ -57,7 +57,7 @@ That may be fine for some people, but this approach has several fundemental limi
 
 So this variation aims to employ one test file per module, to leverage C<prove> power.
 
-One initial concern cropped up on the notion of having excessive numbers of perl instances, ie:
+One initial concern cropped up on the notion of having excessive numbers of C<perl> instances, e.g:
 
     prove
       \ ----- 00_compile/01_Module_1.t
@@ -72,7 +72,7 @@ One initial concern cropped up on the notion of having excessive numbers of perl
 If we were to implement it this way, we'd have the fun overhead of having to spawn B<2> C<perl> instances
 per module tested, which on C<Win32>, would roughly double the test time and give nothing in return.
 
-However, B<Most> of the reason for having a perl process per compile, was to seperate the modules from each other
+However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
 to assure they could be loaded independently.
 
 So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many modules as we have.
@@ -81,18 +81,18 @@ So because we already have a basically empty compile-state per test, we can redu
       \ ----- 00_compile/01_Module_1.t
      |
       \ ----- 00_compile/02_Module_2.t
-    |
+     |
      \ ----- 01_basic.t
 
 
-Granted, there is still some blead here, because doing it like this means you have some modules pre-loaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
+Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
 
 However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
 the compile tests are to make sure the modules load.
 
 So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
 
-Though we may eventually provide an option to spawn additional perl processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
 
 =head1 Other Important Differences to Test::Compile
 
@@ -104,14 +104,14 @@ C<[Test::Compile::PerFile]> supports providing an arbitrary list of files to gen
     file = lib/Foo.pm
     file = lib/Quux.pm
 
-Using this will supercede using finders to find things.
+Using this will supersede using finders to find things.
 
 =head2 Single finder only, not multiple
 
 C<[Test::Compile]> supports 2 finder keys, C<module_finder> and C<script_finder>.
 
 This module only supports one key, C<finder>, and it is expected
-that if you want to test 2 different sets of files, you'll create a seperate instance for that:
+that if you want to test 2 different sets of files, you'll create a separate instance for that:
 
     -[Test::Compile]
     -module_finder = Foo
@@ -121,8 +121,8 @@ that if you want to test 2 different sets of files, you'll create a seperate ins
     +[Test::Compile::PerFile / script compile tests]
     +finder = bar
 
-This is harder to do with C<[Test::Compile]>, because you'd have to declare a seperate file name for it to work,
-where-as C<[Test::Compile::PerFile]> generates a unique filename for each source it tests.
+This is harder to do with C<[Test::Compile]>, because you'd have to declare a separate file name for it to work,
+where-as C<[Test::Compile::PerFile]> generates a unique file name for each source it tests.
 
 Collisions are still possible, but harder to hit by accident.
 
@@ -130,21 +130,21 @@ Collisions are still possible, but harder to hit by accident.
 
 Under the hood, C<Test::Compile> is really file oriented too, it just doesn't give that impression on the box.
 
-It just seemed fundementally less complex to deal only in file paths for this module, as it gives
+It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
 no illusions as to what it can, and cannot do.
 
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a filename and a module name are missmatching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resovled to files )
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
 
 =head1 Performance
 
-A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical CPUs I have:
+A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical C<CPUs> I have:
 
     Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
     Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
 
-So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in tar.gz size.
+So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in C<tar.gz> size.
 
-Hm, thats a pretty serious trade off. Might not really be worth the savings.
+Hmm, that's a pretty serious trade off. Might not really be worth the savings.
 
 Though, comparing compile tests alone:
 
@@ -156,7 +156,7 @@ Though, comparing compile tests alone:
     prove -j4lr --timer t/00-compile/
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
-Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
+That's not bad, considering that although I have 4 logical C<CPUs>, that's really just 2 physical C<CPUs> with hyper-threading ;)
 
 =cut
 
@@ -166,11 +166,12 @@ use Moose::Util::TypeConstraints qw(enum);
 
 my $WANT_MODULE_NAMES = 0;
 
+## no critic (ProhibitPackageVars)
 our %path_translators;
 
 $path_translators{base64_filter} = sub {
   my ($file) = @_;
-  $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
+  $file =~ s/[^-\p{PosixAlnum}_]+/_/msxg;
   return $file;
 };
 
@@ -192,9 +193,9 @@ if (0) {
   $path_translators{module_names} = sub {
     my ($file) = @_;
     return $file if $file !~ /\Alib\//msx;
-    return $file if $file !~ /\.pm\z/msx;
+    return $file if $file !~ /[.]pm\z/msx;
     $file =~ s{\Alib/}{}msx;
-    $file =~ s{\.pm\z}{}msx;
+    $file =~ s{[.]pm\z}{}msx;
     $file =~ s{/}{::}msxg;
     $file = 'module/' . $file;
     return $file;
@@ -204,10 +205,10 @@ if (0) {
 our %templates = ();
 
 {
-  my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+  my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerFile');
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
-    next if $file =~ /\A\./msx;    # Skip hidden files
+    next if $file =~ /\A[.]/msx;    # Skip hidden files
     next if -d $file;              # Skip directories
     $templates{ $file->basename } = $file;
   }
@@ -237,15 +238,24 @@ around dump_config => sub {
   $own_config->{finder}          = $self->finder if $self->has_finder;
   $own_config->{path_translator} = $self->path_translator;
   $own_config->{test_template}   = $self->test_template;
-  $config->{ '' . __PACKAGE__ }  = $own_config;
+  $config->{ q[]. __PACKAGE__ }  = $own_config;
   return $config;
 };
+
+=begin Pod::Coverage
+
+BUILD
+
+=end Pod::Coverage
+
+=cut
 
 sub BUILD {
   my ($self) = @_;
   return if $self->has_file;
   return if $self->has_finder;
   $self->_finder_objects;
+  return;
 }
 
 =attr C<xt_mode>
@@ -311,7 +321,7 @@ I<If not specified>, a custom one is autovivified, and matches only C<*.pm> in C
 I<optional> B<<Str>>
 
 A Name of a routine to translate source paths ( i.e: Paths to modules/scripts that are to be compiled )
-into test filenames.
+into test file names.
 
 I<Default> is C<base64_filter>
 
@@ -335,12 +345,12 @@ That the generated test files will be in the C<prefix> directory named:
     lib_Foo_pm.t
     lib_Foo_Quux.t
 
-This is the default, but not nessecarily the most sane if you have unusual filenaming.
+This is the default, but not necessarily the most sane if you have unusual file naming.
 
     lib/Foo/Bar.pm
     lib/Foo_Bar.pm
 
-This configuratin will not work with this translater.
+This configuration will not work with this translator.
 
 =item * C<mimic_source>
 
@@ -403,6 +413,37 @@ has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predica
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
 
+
+
+sub _generate_file {
+    my ( $self, $name , $file ) = @_;
+    my $code = sub {
+        return $self->fill_in_string(
+            $self->_test_template_content,
+            {
+              file              => $file,
+              plugin_module     => $self->meta->name,
+              plugin_name       => $self->plugin_name,
+              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
+              test_more_version => '0.89',
+            }
+        );
+    };
+    return Dist::Zilla::File::FromCode->new(
+        name             => $name,
+        code_return_type => 'text',
+        code             => $code
+    );
+}
+=method C<gather_files>
+
+This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only happens at this phase.
+
+The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given file,
+the test itself must be included B<after> that file is gathered.
+
+=cut
+
 sub gather_files {
   my ($self) = @_;
   require Dist::Zilla::File::FromCode;
@@ -412,10 +453,8 @@ sub gather_files {
 
   my $translator = $self->_path_translator;
 
-  my $template;
-
   if ( not @{ $self->file } ) {
-    $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
+    $self->log_debug('Did not find any files to add tests for, did you add any files yet?');
     return;
   }
   my $skiplist = {};
@@ -427,29 +466,11 @@ sub gather_files {
       $self->log_debug("Skipping compile test generation for $file");
       next;
     }
-    my $name = $prefix . $translator->($file) . '.t';
+    my $name = sprintf q[%s%s.t], $prefix , $translator->($file);
     $self->log_debug("Adding $name for $file");
-    $self->add_file(
-      Dist::Zilla::File::FromCode->new(
-        name             => $name,
-        code_return_type => 'text',
-        code             => sub {
-          $template = $self->_test_template_content if not defined $template;
-          return $self->fill_in_string(
-            $template,
-            {
-              file              => $file,
-              plugin_module     => $self->meta->name,
-              plugin_name       => $self->plugin_name,
-              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
-              test_more_version => '0.89',
-            }
-          );
-        }
-      )
-    );
+    $self->add_file( $self->_generate_file( $name, $file ) );
   }
-
+  return;
 }
 
 has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
