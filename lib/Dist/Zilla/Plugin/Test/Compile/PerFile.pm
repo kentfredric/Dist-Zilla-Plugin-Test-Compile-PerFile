@@ -98,6 +98,13 @@ around dump_config => sub {
   return $config;
 };
 
+after BUILD => sub {
+    my ( $self ) = @_;
+    return if $self->has_file;
+    return if $self->has_finder;
+    $self->_finder_objects;
+};
+
 
 
 
@@ -163,6 +170,7 @@ has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1,
 has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
 
+
 sub _build_xt_mode {
   return;
 }
@@ -204,16 +212,13 @@ sub _build__test_template_content {
 
 sub _build_file {
   my ($self) = @_;
-  my $skiplist = {};
-  for my $skip ( @{ $self->skip } ) {
-    $skiplist->{$skip} = 1;
-  }
+  return [ map { $_->name } @{ $self->_found_files } ];
+}
 
-  return [ grep { not exists $skiplist->{$_} } map { $_->name } @{ $self->_found_files } ];
+sub _build_skip {
+  return [];
 }
-sub _build_skip { 
-    return [];
-}
+
 sub _build__finder_objects {
   my ($self) = @_;
   if ( $self->has_finder ) {
