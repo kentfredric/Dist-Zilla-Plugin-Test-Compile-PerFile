@@ -26,22 +26,24 @@ has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
 
 our %path_translators = (
   base64_filter => sub {
-    my $file = shift;
+    my ($file)  = @_;
     $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
     return $file;
   },
   mimic_source => sub {
-    return $_[0];
+    my ($file) = @_;
+    return $file;
   },
   module_names => sub {
       my ( $file ) = @_;
       return $file if  $file !~ /\Alib\//msx ;
       return $file if $file !~ /\.pm\z/msx ;
-      my $file =~ s/\Alib\//module/\//msx;
-      $file =~ s/\.pm\z//msx;
-      $file =~ s/\//::/msxg;
+      $file =~ s{\Alib/}{}msx;
+      $file =~ s{\.pm\z}{}msx;
+      $file =~ s{/}{::}msxg;
+      $file = 'module/' . $file;
       return $file;
-  }
+  },
 );
 
 our %templates = ();

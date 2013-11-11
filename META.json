@@ -92,7 +92,7 @@
             "Moose::Util::TypeConstraints" : "0",
             "MooseX::LazyRequire" : "0",
             "Path::Tiny" : "0",
-            "perl" : "5.010",
+            "perl" : "5.006001",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -551,7 +551,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Test::Compile::PerFile",
             "name" : "Test::Compile::PerFile",
-            "version" : "0.001000"
+            "version" : null
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",

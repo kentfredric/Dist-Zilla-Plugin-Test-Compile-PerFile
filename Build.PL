@@ -32,7 +32,7 @@ my %module_build_args = (
     "Moose::Util::TypeConstraints" => 0,
     "MooseX::LazyRequire" => 0,
     "Path::Tiny" => 0,
-    "perl" => "5.010",
+    "perl" => "5.006001",
     "strict" => 0,
     "warnings" => 0
   },

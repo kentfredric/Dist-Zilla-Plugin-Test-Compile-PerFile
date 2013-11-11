@@ -28,7 +28,7 @@ requires:
   Moose::Util::TypeConstraints: 0
   MooseX::LazyRequire: 0
   Path::Tiny: 0
-  perl: 5.010
+  perl: 5.006001
   strict: 0
   warnings: 0
 version: 0.001000
@@ -392,7 +392,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Test::Compile::PerFile
       name: Test::Compile::PerFile
-      version: 0.001000
+      version: ~
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
