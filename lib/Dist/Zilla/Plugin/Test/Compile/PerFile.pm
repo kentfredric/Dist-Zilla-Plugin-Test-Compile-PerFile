@@ -26,12 +26,21 @@ has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
 
 our %path_translators = (
   base64_filter => sub {
-    my $module = shift;
-    $module =~ s/[^-\p{PosixAlnum}_]+/_/g;
-    return $module;
+    my $file = shift;
+    $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
+    return $file;
   },
   mimic_source => sub {
     return $_[0];
+  },
+  module_names => sub {
+      my ( $file ) = @_;
+      return $file if  $file !~ /\Alib\//msx ;
+      return $file if $file !~ /\.pm\z/msx ;
+      my $file =~ s/\Alib\//module/\//msx;
+      $file =~ s/\.pm\z//msx;
+      $file =~ s/\//::/msxg;
+      return $file;
   }
 );
 
@@ -81,7 +90,7 @@ sub _build_prefix {
 
 sub _build_path_translator {
   my ($self) = @_;
-  return 'mimic_source';
+  return 'module_names';
 }
 
 sub _build__path_translator {

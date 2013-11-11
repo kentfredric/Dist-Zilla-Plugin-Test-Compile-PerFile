@@ -92,7 +92,7 @@
             "Moose::Util::TypeConstraints" : "0",
             "MooseX::LazyRequire" : "0",
             "Path::Tiny" : "0",
-            "perl" : "5.006001",
+            "perl" : "5.010",
             "strict" : "0",
             "warnings" : "0"
          }
