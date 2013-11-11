@@ -118,6 +118,29 @@ has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
 
 
+
+sub _generate_file {
+    my ( $self, $name , $file, $ctx ) = @_;
+    my $code = sub {
+        $ctx->{template} = $self->_test_template_content if not exists $ctx->{template};
+        return $self->fill_in_string(
+            $template,
+            {
+              file              => $file,
+              plugin_module     => $self->meta->name,
+              plugin_name       => $self->plugin_name,
+              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
+              test_more_version => '0.89',
+            }
+        );
+    };
+    return Dist::Zilla::File::FromCode->new(
+        name             => $name,
+        code_return_type => 'text',
+        code             => $code
+    );
+}
+
 sub gather_files {
   my ($self) = @_;
   require Dist::Zilla::File::FromCode;
@@ -127,10 +150,10 @@ sub gather_files {
 
   my $translator = $self->_path_translator;
 
-  my $template;
+  my $ctx = {};
 
   if ( not @{ $self->file } ) {
-    $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
+    $self->log_debug('Did not find any files to add tests for, did you add any files yet?');
     return;
   }
   my $skiplist = {};
@@ -142,27 +165,9 @@ sub gather_files {
       $self->log_debug("Skipping compile test generation for $file");
       next;
     }
-    my $name = $prefix . $translator->($file) . '.t';
+    my $name = sprintf q[%s%s.t], $prefix , $translator->($file);
     $self->log_debug("Adding $name for $file");
-    $self->add_file(
-      Dist::Zilla::File::FromCode->new(
-        name             => $name,
-        code_return_type => 'text',
-        code             => sub {
-          $template = $self->_test_template_content if not defined $template;
-          return $self->fill_in_string(
-            $template,
-            {
-              file              => $file,
-              plugin_module     => $self->meta->name,
-              plugin_name       => $self->plugin_name,
-              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
-              test_more_version => '0.89',
-            }
-          );
-        }
-      )
-    );
+    $self->add_file( $self->_generate_file( $name, $file, $ctx ) );
   }
 
 }
