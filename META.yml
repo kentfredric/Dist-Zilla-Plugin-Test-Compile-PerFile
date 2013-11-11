@@ -390,6 +390,10 @@ x_Dist_Zilla:
       name: '@Author::KENTNL/::Role::BundleDeps'
       version: 5.006
     -
+      class: Dist::Zilla::Plugin::FinderCode
+      name: Test::Compile::PerFile/AUTOVIV/:InstallModulesPM
+      version: 5.006
+    -
       class: Dist::Zilla::Plugin::Test::Compile::PerFile
       config:
         Dist::Zilla::Plugin::Test::Compile::PerFile:
@@ -401,7 +405,7 @@ x_Dist_Zilla:
           test_template: 01-basic.t.tpl
           xt_mode: ~
       name: Test::Compile::PerFile
-      version: 0.001000
+      version: ~
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
@@ -433,10 +437,6 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':MainModule'
-      version: 5.006
-    -
-      class: Dist::Zilla::Plugin::FinderCode
-      name: Test::Compile::PerFile/AUTOVIV/:InstallModulesPM
       version: 5.006
   zilla:
     class: Dist::Zilla::Dist::Builder

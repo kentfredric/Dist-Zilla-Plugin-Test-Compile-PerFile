@@ -98,7 +98,7 @@ around dump_config => sub {
   return $config;
 };
 
-after BUILD => sub {
+sub BUILD {
     my ( $self ) = @_;
     return if $self->has_file;
     return if $self->has_finder;

@@ -549,6 +549,11 @@
             "version" : "5.006"
          },
          {
+            "class" : "Dist::Zilla::Plugin::FinderCode",
+            "name" : "Test::Compile::PerFile/AUTOVIV/:InstallModulesPM",
+            "version" : "5.006"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::Test::Compile::PerFile",
             "config" : {
                "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
@@ -563,7 +568,7 @@
                }
             },
             "name" : "Test::Compile::PerFile",
-            "version" : "0.001000"
+            "version" : null
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
@@ -604,11 +609,6 @@
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":MainModule",
-            "version" : "5.006"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::FinderCode",
-            "name" : "Test::Compile::PerFile/AUTOVIV/:InstallModulesPM",
             "version" : "5.006"
          }
       ],
