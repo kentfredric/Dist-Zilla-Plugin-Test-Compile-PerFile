@@ -241,11 +241,6 @@
             "version" : "5.006"
          },
          {
-            "class" : "Dist::Zilla::Plugin::Test::Compile::PerModule",
-            "name" : "Test::Compile::PerModule",
-            "version" : "0.001000"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::Git::NextVersion",
             "name" : "@Author::KENTNL/Git::NextVersion",
             "version" : "2.017"
@@ -574,6 +569,11 @@
             },
             "name" : "@Author::KENTNL/::Role::BundleDeps",
             "version" : "5.006"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Test::Compile::PerModule",
+            "name" : "Test::Compile::PerModule",
+            "version" : "0.001000"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
