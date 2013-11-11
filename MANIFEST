@@ -7,12 +7,11 @@ META.json
 META.yml
 README
 dist.ini
-lib/Dist/Zilla/Plugin/Test/Compile/PerModule.pm
+lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm
 perlcritic.rc
 share/.keep
 share/01-basic.t.tpl
-t/00-compile.t
-t/00-compile/lib_Dist_Zilla_Plugin_Test_Compile_PerModule_pm.t
+t/00-compile/lib_Dist_Zilla_Plugin_Test_Compile_PerFile_pm.t
 t/000-report-versions-tiny.t
 weaver.ini
 xt/author/critic.t

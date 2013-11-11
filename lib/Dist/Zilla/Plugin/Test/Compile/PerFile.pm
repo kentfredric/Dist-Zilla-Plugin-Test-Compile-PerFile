@@ -1,15 +1,15 @@
 use strict;
 use warnings;
 
-package Dist::Zilla::Plugin::Test::Compile::PerModule;
+package Dist::Zilla::Plugin::Test::Compile::PerFile;
 BEGIN {
-  $Dist::Zilla::Plugin::Test::Compile::PerModule::AUTHORITY = 'cpan:KENTNL';
+  $Dist::Zilla::Plugin::Test::Compile::PerFile::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Dist::Zilla::Plugin::Test::Compile::PerModule::VERSION = '0.001000';
+  $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001000';
 }
 
-# ABSTRACT: Create a single .t for each module in a distribution
+# ABSTRACT: Create a single .t for each compilable file in a distribution
 
 use Moose;
 use MooseX::LazyRequire;
@@ -211,7 +211,7 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Test::Compile::PerModule - Create a single .t for each module in a distribution
+Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compilable file in a distribution
 
 =head1 VERSION
 
@@ -298,9 +298,9 @@ Though we may eventually provide an option to spawn additional perl processes to
 
 =head2 Finders useful, but not required
 
-C<[Test::Compile::PerModule]> supports providing an arbitrary list of files to generate compile tests
+C<[Test::Compile::PerFile]> supports providing an arbitrary list of files to generate compile tests
 
-    [Test::Compile::PerModule]
+    [Test::Compile::PerFile]
     file = lib/Foo.pm
     file = lib/Quux.pm
 
@@ -316,15 +316,38 @@ that if you want to test 2 different sets of files, you'll create a seperate ins
     -[Test::Compile]
     -module_finder = Foo
     -script_finder = bar
-    +[Test::Compile::PerModule / module compile tests]
+    +[Test::Compile::PerFile / module compile tests]
     +finder = Foo
-    +[Test::Compile::PerModule / script compile tests]
+    +[Test::Compile::PerFile / script compile tests]
     +finder = bar
 
 This is harder to do with C<[Test::Compile]>, because you'd have to declare a seperate file name for it to work,
-where-as C<[Test::Compile::PerModule]> generates a unique filename for each source it tests.
+where-as C<[Test::Compile::PerFile]> generates a unique filename for each source it tests.
 
 Collisions are still possible, but harder to hit by accident.
+
+=head1 Performance
+
+A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical CPUs I have:
+
+    Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
+    Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
+
+So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in tar.gz size.
+
+Hm, thats a pretty serious trade off. Might not really be worth the savings.
+
+Though, comparing compile tests alone:
+
+    # Test::Compile
+    prove -j4lr --timer t/00-compile.t
+    Files=1, Tests=135, 41 wallclock secs ( 0.07 usr  0.01 sys + 36.82 cusr  3.58 csys = 40.48 CPU)
+
+    # Test::Compile::PerFile
+    prove -j4lr --timer t/00-compile/
+    Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
+
+Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
 
 =head1 AUTHOR
 

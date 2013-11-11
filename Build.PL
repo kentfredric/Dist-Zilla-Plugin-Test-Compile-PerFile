@@ -12,14 +12,14 @@ my %module_build_args = (
   "configure_requires" => {
     "Module::Build" => "0.4008"
   },
-  "dist_abstract" => "Create a single .t for each module in a distribution",
+  "dist_abstract" => "Create a single .t for each compilable file in a distribution",
   "dist_author" => [
     "Kent Fredric <kentfredric\@gmail.com>"
   ],
-  "dist_name" => "Dist-Zilla-Plugin-Test-Compile-PerModule",
+  "dist_name" => "Dist-Zilla-Plugin-Test-Compile-PerFile",
   "dist_version" => "0.001000",
   "license" => "perl",
-  "module_name" => "Dist::Zilla::Plugin::Test::Compile::PerModule",
+  "module_name" => "Dist::Zilla::Plugin::Test::Compile::PerFile",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
@@ -41,18 +41,12 @@ my %module_build_args = (
     "dist" => "share"
   },
   "test_requires" => {
-    "File::Spec" => 0,
-    "IO::Handle" => 0,
-    "IPC::Open3" => 0,
     "Test::More" => "1.001002"
   }
 );
 
 
 my %fallback_build_requires = (
-  "File::Spec" => 0,
-  "IO::Handle" => 0,
-  "IPC::Open3" => 0,
   "Module::Build" => "0.4008",
   "Test::More" => "1.001002"
 );

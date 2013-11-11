@@ -1,11 +1,8 @@
 ---
-abstract: 'Create a single .t for each module in a distribution'
+abstract: 'Create a single .t for each compilable file in a distribution'
 author:
   - 'Kent Fredric <kentfredric@gmail.com>'
 build_requires:
-  File::Spec: 0
-  IO::Handle: 0
-  IPC::Open3: 0
   Module::Build: 0.4008
   Test::More: 1.001002
 configure_requires:
@@ -16,10 +13,10 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Dist-Zilla-Plugin-Test-Compile-PerModule
+name: Dist-Zilla-Plugin-Test-Compile-PerFile
 provides:
-  Dist::Zilla::Plugin::Test::Compile::PerModule:
-    file: lib/Dist/Zilla/Plugin/Test/Compile/PerModule.pm
+  Dist::Zilla::Plugin::Test::Compile::PerFile:
+    file: lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm
     version: 0.001000
 requires:
   Dist::Zilla::File::FromCode: 0
@@ -86,9 +83,6 @@ x_BuiltWith:
     Dist::Zilla::Role::FileGatherer: 5.006
     Dist::Zilla::Role::TextTemplate: 5.006
     File::ShareDir: 1.03
-    File::Spec: 3.45
-    IO::Handle: 1.35
-    IPC::Open3: 1.16
     Module::Build: 0.4008
     Moose: 2.1005
     Moose::Util::TypeConstraints: 2.1005
@@ -127,7 +121,7 @@ x_Dist_Zilla:
         Dist::Zilla::Plugin::Bootstrap::ShareDir::Dist:
           dir: share
         Dist::Zilla::Role::Bootstrap:
-          distname: Dist-Zilla-Plugin-Test-Compile-PerModule
+          distname: Dist-Zilla-Plugin-Test-Compile-PerFile
           fallback: 1
           try_built: 1
           try_built_method: mtime
@@ -137,7 +131,7 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::Bootstrap::lib
       config:
         Dist::Zilla::Role::Bootstrap:
-          distname: Dist-Zilla-Plugin-Test-Compile-PerModule
+          distname: Dist-Zilla-Plugin-Test-Compile-PerFile
           fallback: 1
           try_built: 1
           try_built_method: mtime
@@ -238,17 +232,6 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::Test::MinimumVersion
       name: '@Author::KENTNL/Test::MinimumVersion'
       version: 2.000005
-    -
-      class: Dist::Zilla::Plugin::Test::Compile
-      config:
-        Dist::Zilla::Plugin::Test::Compile:
-          filename: t/00-compile.t
-          module_finder:
-            - ':InstallModules'
-          script_finder:
-            - ':ExecFiles'
-      name: '@Author::KENTNL/Test::Compile'
-      version: 2.037
     -
       class: Dist::Zilla::Plugin::Test::Perl::Critic
       name: '@Author::KENTNL/Test::Perl::Critic'
@@ -407,9 +390,9 @@ x_Dist_Zilla:
       name: '@Author::KENTNL/::Role::BundleDeps'
       version: 5.006
     -
-      class: Dist::Zilla::Plugin::Test::Compile::PerModule
-      name: Test::Compile::PerModule
-      version: 0.001000
+      class: Dist::Zilla::Plugin::Test::Compile::PerFile
+      name: Test::Compile::PerFile
+      version: ~
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
@@ -444,7 +427,7 @@ x_Dist_Zilla:
       version: 5.006
     -
       class: Dist::Zilla::Plugin::FinderCode
-      name: Test::Compile::PerModule/AUTOVIV/:InstallModulesPM
+      name: Test::Compile::PerFile/AUTOVIV/:InstallModulesPM
       version: 5.006
   zilla:
     class: Dist::Zilla::Dist::Builder
