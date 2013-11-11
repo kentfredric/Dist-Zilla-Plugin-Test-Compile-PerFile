@@ -563,7 +563,7 @@
                }
             },
             "name" : "Test::Compile::PerFile",
-            "version" : null
+            "version" : "0.001000"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
