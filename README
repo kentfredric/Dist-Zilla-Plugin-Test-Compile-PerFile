@@ -101,6 +101,15 @@ DESCRIPTION
     improve efficiency of tests, not to decrease them, that would be an
     approach counter-productive to this modules purpose.
 
+METHODS
+  "gather_files"
+    This plugin operates ONLY during "gather_files", unlike other plugins
+    which have multiple phase involvement, this only happens at this phase.
+
+    The intrinsic dependence of this plugin on other files in your dist,
+    means that in order for it to generate a test for any given file, the
+    test itself must be included after that file is gathered.
+
 ATTRIBUTES
   "xt_mode"
     *optional* "Bool"

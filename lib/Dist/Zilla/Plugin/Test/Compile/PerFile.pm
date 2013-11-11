@@ -117,6 +117,7 @@ has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predica
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
 
+
 sub gather_files {
   my ($self) = @_;
   require Dist::Zilla::File::FromCode;
@@ -376,6 +377,15 @@ the compile tests are to make sure the modules load.
 So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
 
 Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+
+=head1 METHODS
+
+=head2 C<gather_files>
+
+This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only happens at this phase.
+
+The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given file,
+the test itself must be included B<after> that file is gathered.
 
 =head1 ATTRIBUTES
 
