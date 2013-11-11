@@ -133,7 +133,7 @@ sub gather_files {
                         file => $file,
                         plugin_module => $self->meta->name, 
                         plugin_name   => $self->plugin_name,
-                        version       => ( $self->VERSION ? $self->VERSION : '<self>' ),
+                        plugin_version       => ( $self->VERSION ? $self->VERSION : '<self>' ),
                         test_more_version => '0.89',
                 });
             }
