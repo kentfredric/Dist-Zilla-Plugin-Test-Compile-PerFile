@@ -391,6 +391,14 @@ x_Dist_Zilla:
       version: 5.006
     -
       class: Dist::Zilla::Plugin::Test::Compile::PerFile
+      config:
+        Dist::Zilla::Plugin::Test::Compile::PerFile:
+          file:
+            - lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm
+          path_translator: base64_filter
+          prefix: t/00-compile
+          test_template: 01-basic.t.tpl
+          xt_mode: ~
       name: Test::Compile::PerFile
       version: 0.001000
     -
