@@ -191,7 +191,7 @@ ATTRIBUTES
             lib_Foo_Quux.t
 
         This is the default, but not nessecarily the most sane if you have
-        unusual filenaming.
+        unusual file naming.
 
             lib/Foo/Bar.pm
             lib/Foo_Bar.pm
@@ -265,7 +265,7 @@ Other Important Differences to Test::Compile
     "script_finder".
 
     This module only supports one key, "finder", and it is expected that if
-    you want to test 2 different sets of files, you'll create a seperate
+    you want to test 2 different sets of files, you'll create a separate
     instance for that:
 
         -[Test::Compile]
@@ -277,8 +277,8 @@ Other Important Differences to Test::Compile
         +finder = bar
 
     This is harder to do with "[Test::Compile]", because you'd have to
-    declare a seperate file name for it to work, where-as
-    "[Test::Compile::PerFile]" generates a unique filename for each source
+    declare a separate file name for it to work, where-as
+    "[Test::Compile::PerFile]" generates a unique file name for each source
     it tests.
 
     Collisions are still possible, but harder to hit by accident.
@@ -287,26 +287,26 @@ Other Important Differences to Test::Compile
     Under the hood, "Test::Compile" is really file oriented too, it just
     doesn't give that impression on the box.
 
-    It just seemed fundementally less complex to deal only in file paths for
+    It just seemed fundamentally less complex to deal only in file paths for
     this module, as it gives no illusions as to what it can, and cannot do.
 
     ( For example, by being clearly file oriented, there's no ambiguity of
-    how it will behave when a filename and a module name are missmatching in
-    some way, by simply not caring about the latter , it will also never
+    how it will behave when a file name and a module name are miss-matching
+    in some way, by simply not caring about the latter , it will also never
     attempt to probe and load modules that can't be automatically resolved
     to files )
 
 Performance
     A rough comparison on the "dzil" git tree, with "HARNESS_OPTIONS=j4:c"
-    where 4 is the number of logical CPUs I have:
+    where 4 is the number of logical "CPUs" I have:
 
         Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
         Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
 
     So a 20% saving for a 300% growth in file count, a 500k growth in
-    unpacked tar size, and a 4k growth in tar.gz size.
+    unpacked tar size, and a 4k growth in "tar.gz" size.
 
-    Hm, thats a pretty serious trade off. Might not really be worth the
+    Hmm, that's a pretty serious trade off. Might not really be worth the
     savings.
 
     Though, comparing compile tests alone:
@@ -319,8 +319,8 @@ Performance
         prove -j4lr --timer t/00-compile/
         Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
-    Thats not bad, considering that although I have 4 logical CPUS, thats
-    really just 2 physical cpus with hyperthreading ;)
+    That's not bad, considering that although I have 4 logical "CPUs", thats
+    really just 2 physical "CPUs" with hyperthreading ;)
 
 AUTHOR
     Kent Fredric <kentfredric@gmail.com>

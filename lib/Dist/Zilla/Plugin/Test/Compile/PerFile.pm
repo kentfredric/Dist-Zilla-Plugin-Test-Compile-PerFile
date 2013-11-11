@@ -23,6 +23,7 @@ use Moose::Util::TypeConstraints qw(enum);
 
 my $WANT_MODULE_NAMES = 0;
 
+## no critic (ProhibitPackageVars)
 our %path_translators;
 
 $path_translators{base64_filter} = sub {
@@ -64,7 +65,7 @@ our %templates = ();
   my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerFile');
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
-    next if $file =~ /\A\./msx;    # Skip hidden files
+    next if $file =~ /\A[.]/msx;    # Skip hidden files
     next if -d $file;              # Skip directories
     $templates{ $file->basename } = $file;
   }
@@ -475,7 +476,7 @@ That the generated test files will be in the C<prefix> directory named:
     lib_Foo_pm.t
     lib_Foo_Quux.t
 
-This is the default, but not nessecarily the most sane if you have unusual filenaming.
+This is the default, but not nessecarily the most sane if you have unusual file naming.
 
     lib/Foo/Bar.pm
     lib/Foo_Bar.pm
@@ -550,7 +551,7 @@ Using this will supersede using finders to find things.
 C<[Test::Compile]> supports 2 finder keys, C<module_finder> and C<script_finder>.
 
 This module only supports one key, C<finder>, and it is expected
-that if you want to test 2 different sets of files, you'll create a seperate instance for that:
+that if you want to test 2 different sets of files, you'll create a separate instance for that:
 
     -[Test::Compile]
     -module_finder = Foo
@@ -560,8 +561,8 @@ that if you want to test 2 different sets of files, you'll create a seperate ins
     +[Test::Compile::PerFile / script compile tests]
     +finder = bar
 
-This is harder to do with C<[Test::Compile]>, because you'd have to declare a seperate file name for it to work,
-where-as C<[Test::Compile::PerFile]> generates a unique filename for each source it tests.
+This is harder to do with C<[Test::Compile]>, because you'd have to declare a separate file name for it to work,
+where-as C<[Test::Compile::PerFile]> generates a unique file name for each source it tests.
 
 Collisions are still possible, but harder to hit by accident.
 
@@ -569,21 +570,21 @@ Collisions are still possible, but harder to hit by accident.
 
 Under the hood, C<Test::Compile> is really file oriented too, it just doesn't give that impression on the box.
 
-It just seemed fundementally less complex to deal only in file paths for this module, as it gives
+It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
 no illusions as to what it can, and cannot do.
 
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a filename and a module name are missmatching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
 
 =head1 Performance
 
-A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical CPUs I have:
+A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical C<CPUs> I have:
 
     Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
     Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
 
-So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in tar.gz size.
+So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in C<tar.gz> size.
 
-Hm, thats a pretty serious trade off. Might not really be worth the savings.
+Hmm, that's a pretty serious trade off. Might not really be worth the savings.
 
 Though, comparing compile tests alone:
 
@@ -595,7 +596,7 @@ Though, comparing compile tests alone:
     prove -j4lr --timer t/00-compile/
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
-Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
+That's not bad, considering that although I have 4 logical C<CPUs>, thats really just 2 physical C<CPUs> with hyperthreading ;)
 
 =for Pod::Coverage BUILD
 
