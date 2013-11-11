@@ -34,16 +34,6 @@ our %path_translators = (
     my ($file) = @_;
     return $file;
   },
-  module_names => sub {
-      my ( $file ) = @_;
-      return $file if  $file !~ /\Alib\//msx ;
-      return $file if $file !~ /\.pm\z/msx ;
-      $file =~ s{\Alib/}{}msx;
-      $file =~ s{\.pm\z}{}msx;
-      $file =~ s{/}{::}msxg;
-      $file = 'module/' . $file;
-      return $file;
-  },
 );
 
 our %templates = ();
@@ -362,6 +352,26 @@ Though, comparing compile tests alone:
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
 Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
+
+=begin comment
+
+This really example code, because this notation is so unrecommended,
+we won't even put it in code. Colons are highly non-portable.
+
+Edit out this comment if you're serious.
+
+  module_names => sub {
+      my ( $file ) = @_;
+      return $file if $file !~ /\Alib\//msx ;
+      return $file if $file !~ /\.pm\z/msx ;
+      $file =~ s{\Alib/}{}msx;
+      $file =~ s{\.pm\z}{}msx;
+      $file =~ s{/}{::}msxg;
+      $file = 'module/' . $file;
+      return $file;
+  },
+
+=end comment
 
 =head1 AUTHOR
 
