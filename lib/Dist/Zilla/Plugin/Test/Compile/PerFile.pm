@@ -24,9 +24,12 @@ use Moose::Util::TypeConstraints qw(enum);
 has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
 has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
 
+
+my $WANT_MODULE_NAMES = 0;
+
 our %path_translators = (
   base64_filter => sub {
-    my ($file)  = @_;
+    my ($file) = @_;
     $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
     return $file;
   },
@@ -34,6 +37,23 @@ our %path_translators = (
     my ($file) = @_;
     return $file;
   },
+  (
+    $WANT_MODULE_NAMES
+    ? (
+      module_names => sub {
+        my ($file) = @_;
+        return $file if $file !~ /\Alib\//msx;
+        return $file if $file !~ /\.pm\z/msx;
+        $file =~ s{\Alib/}{}msx;
+        $file =~ s{\.pm\z}{}msx;
+        $file =~ s{/}{::}msxg;
+        $file = 'module/' . $file;
+        return $file;
+      }
+      )
+    : ()
+  ),
+
 );
 
 our %templates = ();
@@ -47,25 +67,25 @@ for my $file ( $template_dir->children ) {
 }
 
 around mvp_multivalue_args => sub {
-    my ( $orig, $self, @args ) = @_;
-    return ( 'finder', 'file', 'files', $self->$orig(@args) );
+  my ( $orig, $self, @args ) = @_;
+  return ( 'finder', 'file', 'files', $self->$orig(@args) );
 };
 
 around mvp_aliases => sub {
   my ( $orig, $self, @args ) = @_;
-  my $hash = $self->$orig( @args );
+  my $hash = $self->$orig(@args);
   $hash = {} if not defined $hash;
-  $hash->{ file  } = 'files';
+  $hash->{file} = 'files';
   return $hash;
 };
 
-has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
-has _path_translator => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
-has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
-has _test_template => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
-has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
-has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1 , predicate => 'has_finder' );
+has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
+has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
+has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
+has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
+has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
+has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
 
 sub _build_xt_mode {
@@ -82,7 +102,7 @@ sub _build_prefix {
 
 sub _build_path_translator {
   my ($self) = @_;
-  return 'module_names';
+  return 'base64_filter';
 }
 
 sub _build__path_translator {
@@ -100,106 +120,114 @@ sub _build__test_template {
   my $template = $self->test_template;
   return $templates{$template};
 }
+
 sub _build__test_template_content {
-    my ( $self ) = @_;
-    my $template = $self->_test_template;
-    return $template->slurp_utf8;
+  my ($self) = @_;
+  my $template = $self->_test_template;
+  return $template->slurp_utf8;
 }
+
 sub _build_file {
-    my ( $self ) = @_;
-    return [ map { $_->name } @{ $self->_found_files } ];
+  my ($self) = @_;
+  return [ map { $_->name } @{ $self->_found_files } ];
 }
 
 sub gather_files {
-    my ( $self ) = @_;
-    require Dist::Zilla::File::FromCode;
+  my ($self) = @_;
+  require Dist::Zilla::File::FromCode;
 
-    my $prefix = $self->prefix;
-    $prefix =~ s{/?\z}{/}msx;
+  my $prefix = $self->prefix;
+  $prefix =~ s{/?\z}{/}msx;
 
-    my $translator = $self->_path_translator;
+  my $translator = $self->_path_translator;
 
-    my $template;
+  my $template;
 
-    if ( not @{ $self->file } ) {
-        $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
-        return;
-    }
-    for my $file ( @{ $self->file } ) {
-        my $name = $prefix . $translator->($file) . '.t';
-        $self->log_debug("Adding $name for $file");
-        $self->add_file(Dist::Zilla::File::FromCode->new(
-            name => $name,
-            code_return_type => 'text',
-            code => sub {
-                $template = $self->_test_template_content if not defined $template;
-                return $self->fill_in_string($template, { 
-                        file => $file,
-                        plugin_module => $self->meta->name, 
-                        plugin_name   => $self->plugin_name,
-                        plugin_version       => ( $self->VERSION ? $self->VERSION : '<self>' ),
-                        test_more_version => '0.89',
-                });
+  if ( not @{ $self->file } ) {
+    $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
+    return;
+  }
+  for my $file ( @{ $self->file } ) {
+    my $name = $prefix . $translator->($file) . '.t';
+    $self->log_debug("Adding $name for $file");
+    $self->add_file(
+      Dist::Zilla::File::FromCode->new(
+        name             => $name,
+        code_return_type => 'text',
+        code             => sub {
+          $template = $self->_test_template_content if not defined $template;
+          return $self->fill_in_string(
+            $template,
+            {
+              file              => $file,
+              plugin_module     => $self->meta->name,
+              plugin_name       => $self->plugin_name,
+              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
+              test_more_version => '0.89',
             }
-        ));
-    }
+          );
+        }
+      )
+    );
+  }
 
 }
 
 sub _build__finder_objects {
-    my ($self) = @_;
-    if ( $self->has_finder ) {
-        my @out;
-        for my $finder ( @{ $self->finder } ) {
-            my $plugin = $self->zilla->plugin_named($finder);
-            if ( not $plugin ) {
-                $self->log_fatal("no plugin named $finder found");
-            }
-            if ( not $plugin->does('Dist::Zilla::Role::FileFinder') ) {
-                $self->log_fatal("plugin $finder is not a FileFinder");
-            }
-            push @out, $plugin;
-        }
-        return \@out;
+  my ($self) = @_;
+  if ( $self->has_finder ) {
+    my @out;
+    for my $finder ( @{ $self->finder } ) {
+      my $plugin = $self->zilla->plugin_named($finder);
+      if ( not $plugin ) {
+        $self->log_fatal("no plugin named $finder found");
+      }
+      if ( not $plugin->does('Dist::Zilla::Role::FileFinder') ) {
+        $self->log_fatal("plugin $finder is not a FileFinder");
+      }
+      push @out, $plugin;
     }
-    return [ $self->_vivify_installmodules_pm_finder ];
+    return \@out;
+  }
+  return [ $self->_vivify_installmodules_pm_finder ];
 }
 
 sub _vivify_installmodules_pm_finder {
-    my ($self) = @_;
-    my $name = $self->plugin_name;
-    $name .= '/AUTOVIV/:InstallModulesPM';
-    if ( my $plugin = $self->zilla->plugin_named($name) ) {
-        return $plugin;
-    }
-    require Dist::Zilla::Plugin::FinderCode;
-    my $plugin = Dist::Zilla::Plugin::FinderCode->new(
-        {
-            plugin_name => $name,
-            zilla       => $self->zilla,
-            style       => 'grep',
-            code        => sub {
-                my ( $file, $self ) = @_;
-                local $_ = $file->name;
-                ## no critic (RegularExpressions)
-                return 1 if m{\Alib/} and m{\.(pm)$};
-                return 1 if $_ eq $self->zilla->main_module;
-                return;
-            },
-        }
-    );
-    push @{ $self->zilla->plugins }, $plugin;
+  my ($self) = @_;
+  my $name = $self->plugin_name;
+  $name .= '/AUTOVIV/:InstallModulesPM';
+  if ( my $plugin = $self->zilla->plugin_named($name) ) {
     return $plugin;
-}
-sub _found_files {
-    my ($self) = @_;
-    my %by_name;
-    for my $plugin ( @{ $self->_finder_objects } ) {
-        for my $file ( @{ $plugin->find_files } ) {
-            $by_name{ $file->name } = $file;
-        }
+  }
+  require Dist::Zilla::Plugin::FinderCode;
+  my $plugin = Dist::Zilla::Plugin::FinderCode->new(
+    {
+      plugin_name => $name,
+      zilla       => $self->zilla,
+      style       => 'grep',
+      code        => sub {
+        my ( $file, $self ) = @_;
+        local $_ = $file->name;
+        ## no critic (RegularExpressions)
+        return 1 if m{\Alib/} and m{\.(pm)$};
+        return 1 if $_ eq $self->zilla->main_module;
+        return;
+      },
     }
-    return [ values %by_name ];
+  );
+  push @{ $self->zilla->plugins }, $plugin;
+  return $plugin;
+}
+
+sub _found_files {
+  my ($self) = @_;
+  my %by_name;
+  for my $plugin ( @{ $self->_finder_objects } ) {
+    for my $file ( @{ $plugin->find_files } ) {
+      $by_name{ $file->name } = $file;
+    }
+  }
+  return [ values %by_name ];
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -355,21 +383,10 @@ Thats not bad, considering that although I have 4 logical CPUS, thats really jus
 
 =begin comment
 
-This really example code, because this notation is so unrecommended,
-we won't even put it in code. Colons are highly non-portable.
+This really example code, because this notation is so unrecommended, as Colons in file names 
+are highly non-portable.
 
-Edit out this comment if you're serious.
-
-  module_names => sub {
-      my ( $file ) = @_;
-      return $file if $file !~ /\Alib\//msx ;
-      return $file if $file !~ /\.pm\z/msx ;
-      $file =~ s{\Alib/}{}msx;
-      $file =~ s{\.pm\z}{}msx;
-      $file =~ s{/}{::}msxg;
-      $file = 'module/' . $file;
-      return $file;
-  },
+Edit this to = 1 if you're 100% serious you want this.
 
 =end comment
 

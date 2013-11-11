@@ -551,7 +551,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Test::Compile::PerFile",
             "name" : "Test::Compile::PerFile",
-            "version" : "0.001000"
+            "version" : null
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
