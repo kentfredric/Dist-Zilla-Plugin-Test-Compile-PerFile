@@ -62,6 +62,7 @@ our %templates = ();
 
 {
   my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+  warn "Dist dir is $dist_dir";
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
     next if $file =~ /\A\./msx;    # Skip hidden files
