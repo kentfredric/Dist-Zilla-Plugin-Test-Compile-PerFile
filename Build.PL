@@ -37,6 +37,9 @@ my %module_build_args = (
     "warnings" => 0
   },
   "script_files" => [],
+  "share_dir" => {
+    "dist" => "share"
+  },
   "test_requires" => {
     "File::Spec" => 0,
     "IO::Handle" => 0,

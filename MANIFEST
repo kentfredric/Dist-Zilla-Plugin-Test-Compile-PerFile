@@ -9,6 +9,8 @@ README
 dist.ini
 lib/Dist/Zilla/Plugin/Test/Compile/PerModule.pm
 perlcritic.rc
+share/.keep
+share/01-basic.t.tpl
 t/00-compile.t
 t/000-report-versions-tiny.t
 weaver.ini
