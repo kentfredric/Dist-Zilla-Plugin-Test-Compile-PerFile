@@ -392,7 +392,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Test::Compile::PerFile
       name: Test::Compile::PerFile
-      version: ~
+      version: 0.001000
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
