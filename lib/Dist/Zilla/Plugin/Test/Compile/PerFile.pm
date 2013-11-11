@@ -62,10 +62,6 @@ our %templates = ();
 
 {
   my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerFile');
-  warn "Dist dir is $dist_dir";
-  for my $i (@INC){ 
-      *STDERR->printf("\e[31m%s\e[0m\n", $i);
-  }
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
     next if $file =~ /\A\./msx;    # Skip hidden files
@@ -147,9 +143,6 @@ sub gather_files {
       next;
     }
     my $name = $prefix . $translator->($file) . '.t';
-    if ( $file =~ /\s+$/ ) {
-        $self->log_fatal("Trailing whitespace on RHS of filename <$file>");
-    }
     $self->log_debug("Adding $name for $file");
     $self->add_file(
       Dist::Zilla::File::FromCode->new(
