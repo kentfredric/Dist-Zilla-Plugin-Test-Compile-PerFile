@@ -143,6 +143,9 @@ sub gather_files {
       next;
     }
     my $name = $prefix . $translator->($file) . '.t';
+    if ( $file =~ /\s+$/ ) {
+        $self->log_fatal("Trailing whitespace on RHS of filename <$file>");
+    }
     $self->log_debug("Adding $name for $file");
     $self->add_file(
       Dist::Zilla::File::FromCode->new(
