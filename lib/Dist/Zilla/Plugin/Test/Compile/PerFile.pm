@@ -120,11 +120,10 @@ has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),  
 
 
 sub _generate_file {
-    my ( $self, $name , $file, $ctx ) = @_;
+    my ( $self, $name , $file ) = @_;
     my $code = sub {
-        $ctx->{template} = $self->_test_template_content if not exists $ctx->{template};
         return $self->fill_in_string(
-            $template,
+            $self->_test_template_content,
             {
               file              => $file,
               plugin_module     => $self->meta->name,
@@ -150,8 +149,6 @@ sub gather_files {
 
   my $translator = $self->_path_translator;
 
-  my $ctx = {};
-
   if ( not @{ $self->file } ) {
     $self->log_debug('Did not find any files to add tests for, did you add any files yet?');
     return;
@@ -167,7 +164,7 @@ sub gather_files {
     }
     my $name = sprintf q[%s%s.t], $prefix , $translator->($file);
     $self->log_debug("Adding $name for $file");
-    $self->add_file( $self->_generate_file( $name, $file, $ctx ) );
+    $self->add_file( $self->_generate_file( $name, $file ) );
   }
 
 }
