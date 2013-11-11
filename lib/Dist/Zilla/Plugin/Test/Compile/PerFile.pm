@@ -66,6 +66,7 @@ our %templates = ();
   for my $i (@INC){ 
       *STDERR->printf("\e[31m%s\e[0m\n", $i);
   }
+  system('bash');
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
     next if $file =~ /\A\./msx;    # Skip hidden files
