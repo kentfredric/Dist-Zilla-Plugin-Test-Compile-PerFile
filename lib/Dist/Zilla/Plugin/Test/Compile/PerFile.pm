@@ -99,11 +99,11 @@ around dump_config => sub {
 };
 
 sub BUILD {
-    my ( $self ) = @_;
-    return if $self->has_file;
-    return if $self->has_finder;
-    $self->_finder_objects;
-};
+  my ($self) = @_;
+  return if $self->has_file;
+  return if $self->has_finder;
+  $self->_finder_objects;
+}
 
 
 
@@ -169,7 +169,6 @@ has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1,
 has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
-
 
 sub _build_xt_mode {
   return;
