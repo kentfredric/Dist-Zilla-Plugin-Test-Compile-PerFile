@@ -110,6 +110,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile/issues"
+      },
+      "homepage" : "https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile.git",
+         "web" : "https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile"
+      }
+   },
    "version" : "0.001000",
    "x_BuiltWith" : {
       "modules" : {

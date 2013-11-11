@@ -47,7 +47,7 @@ DESCRIPTION
     2. Parallelism is developer side, not deployment side governed.
     3. This approach means "prove -s" will have no impact.
     4. This approach means "prove -j" will have no impact.
-    5. This approach means other features of "prove" such as the
+    5. This approach inhibits other features of "prove" such as the
     "--state=slow"
 
     So this variation aims to employ one test file per module, to leverage
@@ -162,7 +162,7 @@ ATTRIBUTES
     "*.pm" in "lib/"
 
   "path_translator"
-    *optional* <Str>
+    *optional* "Str"
 
     A Name of a routine to translate source paths ( i.e: Paths to
     modules/scripts that are to be compiled ) into test file names.

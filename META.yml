@@ -31,6 +31,10 @@ requires:
   perl: 5.006001
   strict: 0
   warnings: 0
+resources:
+  bugtracker: https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile/issues
+  homepage: https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile
+  repository: https://github.com/kentfredric/Dist-Zilla-Plugin-Test-Compile-PerFile.git
 version: 0.001000
 x_BuiltWith:
   modules:
