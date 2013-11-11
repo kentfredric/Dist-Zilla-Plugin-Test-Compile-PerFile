@@ -97,6 +97,40 @@ DESCRIPTION
     improve efficiency of tests, not to decrease them, that would be an
     approach counter-productive to this modules purpose.
 
+Other Important Differences to Test::Compile
+  Finders useful, but not required
+    "[Test::Compile::PerModule]" supports providing an arbitrary list of
+    files to generate compile tests
+
+        [Test::Compile::PerModule]
+        file = lib/Foo.pm
+        file = lib/Quux.pm
+
+    Using this will supercede using finders to find things.
+
+  Single finder only, not multiple
+    "[Test::Compile]" supports 2 finder keys, "module_finder" and
+    "script_finder".
+
+    This module only supports one key, "finder", and it is expected that if
+    you want to test 2 different sets of files, you'll create a seperate
+    instance for that:
+
+        -[Test::Compile]
+        -module_finder = Foo
+        -script_finder = bar
+        +[Test::Compile::PerModule / module compile tests]
+        +finder = Foo
+        +[Test::Compile::PerModule / script compile tests]
+        +finder = bar
+
+    This is harder to do with "[Test::Compile]", because you'd have to
+    declare a seperate file name for it to work, where-as
+    "[Test::Compile::PerModule]" generates a unique filename for each source
+    it tests.
+
+    Collisions are still possible, but harder to hit by accident.
+
 AUTHOR
     Kent Fredric <kentfredric@gmail.com>
 

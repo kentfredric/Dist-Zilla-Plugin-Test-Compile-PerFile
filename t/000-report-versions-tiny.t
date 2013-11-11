@@ -48,7 +48,10 @@ sub pmver {
     return sprintf('%-45s => %-10s%-15s%s', $module, $pmver, $wanted, "\n");
 }
 
+eval { $v .= pmver('Dist::Zilla::File::FromCode','any version') };
+eval { $v .= pmver('Dist::Zilla::Plugin::FinderCode','any version') };
 eval { $v .= pmver('Dist::Zilla::Role::FileGatherer','any version') };
+eval { $v .= pmver('Dist::Zilla::Role::TextTemplate','any version') };
 eval { $v .= pmver('File::ShareDir','any version') };
 eval { $v .= pmver('File::Spec','any version') };
 eval { $v .= pmver('IO::Handle','any version') };
@@ -56,6 +59,7 @@ eval { $v .= pmver('IPC::Open3','any version') };
 eval { $v .= pmver('Module::Build','0.4008') };
 eval { $v .= pmver('Moose','any version') };
 eval { $v .= pmver('Moose::Util::TypeConstraints','any version') };
+eval { $v .= pmver('MooseX::LazyRequire','any version') };
 eval { $v .= pmver('Path::Tiny','any version') };
 eval { $v .= pmver('Test::More','1.001002') };
 eval { $v .= pmver('strict','any version') };

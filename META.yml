@@ -22,10 +22,14 @@ provides:
     file: lib/Dist/Zilla/Plugin/Test/Compile/PerModule.pm
     version: 0.001000
 requires:
+  Dist::Zilla::File::FromCode: 0
+  Dist::Zilla::Plugin::FinderCode: 0
   Dist::Zilla::Role::FileGatherer: 0
+  Dist::Zilla::Role::TextTemplate: 0
   File::ShareDir: 0
   Moose: 0
   Moose::Util::TypeConstraints: 0
+  MooseX::LazyRequire: 0
   Path::Tiny: 0
   perl: 5.006001
   strict: 0
@@ -33,12 +37,14 @@ requires:
 version: 0.001000
 x_BuiltWith:
   modules:
+    Dist::Zilla::File::FromCode: 5.006
     Dist::Zilla::Plugin::Author::KENTNL::MinimumPerl: 2.001000
     Dist::Zilla::Plugin::Authority: 1.006
     Dist::Zilla::Plugin::AutoPrereqs: 5.006
     Dist::Zilla::Plugin::CheckExtraTests: 0.015
     Dist::Zilla::Plugin::ConfirmRelease: 5.006
     Dist::Zilla::Plugin::EOLTests: 0.02
+    Dist::Zilla::Plugin::FinderCode: 5.006
     Dist::Zilla::Plugin::Git::Check: 2.017
     Dist::Zilla::Plugin::Git::Commit: 2.017
     Dist::Zilla::Plugin::Git::CommitBuild: 2.017
@@ -78,6 +84,7 @@ x_BuiltWith:
     Dist::Zilla::PluginBundle::Author::KENTNL: 2.001000
     Dist::Zilla::PluginBundle::Author::KENTNL::Lite: 1.7.2
     Dist::Zilla::Role::FileGatherer: 5.006
+    Dist::Zilla::Role::TextTemplate: 5.006
     File::ShareDir: 1.03
     File::Spec: 3.45
     IO::Handle: 1.35
@@ -85,6 +92,7 @@ x_BuiltWith:
     Module::Build: 0.4008
     Moose: 2.1005
     Moose::Util::TypeConstraints: 2.1005
+    MooseX::LazyRequire: 0.10
     Path::Tiny: 0.044
     Pod::Coverage::TrustPod: 0.100003
     Test::CPAN::Changes: 0.25
@@ -433,6 +441,10 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':MainModule'
+      version: 5.006
+    -
+      class: Dist::Zilla::Plugin::FinderCode
+      name: Test::Compile::PerModule/AUTOVIV/:InstallModulesPM
       version: 5.006
   zilla:
     class: Dist::Zilla::Dist::Builder

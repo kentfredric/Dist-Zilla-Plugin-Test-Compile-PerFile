@@ -12,8 +12,9 @@ BEGIN {
 # ABSTRACT: Create a single .t for each module in a distribution
 
 use Moose;
+use MooseX::LazyRequire;
 
-with 'Dist::Zilla::Role::FileGatherer';
+with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 
 
 use Path::Tiny qw(path);
@@ -23,47 +24,176 @@ use Moose::Util::TypeConstraints qw(enum);
 has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
 has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
 
-our %module_translators = (
-    base64_filter => sub {
-        my $module = shift;
-        $module =~ s/[^-\p{PosixAlnum}_]+/_/g;
-        return $module;
-    },
+our %path_translators = (
+  base64_filter => sub {
+    my $module = shift;
+    $module =~ s/[^-\p{PosixAlnum}_]+/_/g;
+    return $module;
+  },
 );
 
 our %templates = ();
 
-my $dist_dir = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
 my $template_dir = path($dist_dir);
+for my $file ( $template_dir->children ) {
+  next if $file =~ /\A\./msx;    # Skip hidden files
+  next if -d $file;              # Skip directories
+  $templates{ $file->basename } = $file;
+}
 
-has module_translator => ( is => ro =>, isa => enum([sort keys %module_translators]), lazy_build => 1 );
-has _module_translator => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
+around mvp_multivalue_args => sub {
+    my ( $orig, $self, @args ) = @_;
+    return ( 'finder', 'file', 'files', $self->$orig(@args) );
+};
+
+around mvp_aliases => sub {
+  my ( $orig, $self, @args ) = @_;
+  my $hash = $self->$orig( @args );
+  $hash = {} if not defined $hash;
+  $hash->{ file  } = 'files';
+  return $hash;
+};
+
+has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
+has _path_translator => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
+has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
+has _test_template => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
+has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
+has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
+has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1 , predicate => 'has_finder' );
+has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
 
 sub _build_xt_mode {
-    return;
+  return;
 }
 
 sub _build_prefix {
-    my ( $self ) = @_;
-    if ( $self->xt_mode ) {
-        return 'xt/author/00-compile';
-    }
-    return 't/00-compile';
-}
-sub _build_module_translator {
-    my ( $self ) = @_;
-    return 'base64_filter';
-}
-sub _build__module_translator {
-    my ($self) = @_;
-    my $translator = $self->module_translator;
-    return $module_translators{$translator};
+  my ($self) = @_;
+  if ( $self->xt_mode ) {
+    return 'xt/author/00-compile';
+  }
+  return 't/00-compile';
 }
 
+sub _build_path_translator {
+  my ($self) = @_;
+  return 'base64_filter';
+}
+
+sub _build__path_translator {
+  my ($self) = @_;
+  my $translator = $self->path_translator;
+  return $path_translators{$translator};
+}
+
+sub _build_test_template {
+  return '01-basic.t.tpl';
+}
+
+sub _build__test_template {
+  my ($self) = @_;
+  my $template = $self->test_template;
+  return $templates{$template};
+}
+sub _build__test_template_content {
+    my ( $self ) = @_;
+    my $template = $self->_test_template;
+    return $template->slurp_utf8;
+}
+sub _build_file {
+    my ( $self ) = @_;
+    return [ map { $_->name } @{ $self->_found_files } ];
+}
 
 sub gather_files {
+    my ( $self ) = @_;
+    require Dist::Zilla::File::FromCode;
+
+    my $prefix = $self->prefix;
+    $prefix =~ s{/?\z}{/}msx;
+
+    my $translator = $self->_path_translator;
+
+    my $template;
+
+    for my $file ( @{ $self->file } ) {
+        my $name = $prefix . $translator->($file) . '.t';
+
+        $self->add_file(Dist::Zilla::File::FromCode->new(
+            name => $name,
+            code_return_type => 'text',
+            code => sub {
+                $template = $self->_test_template_content if not defined $template;
+                return $self->fill_in_string($template, { 
+                        file => $file,
+                        plugin_module => $self->meta->name, 
+                        plugin_name   => $self->plugin_name,
+                        version       => ( $self->VERSION ? $self->VERSION : '<self>' ),
+                        test_more_version => '0.89',
+                });
+            }
+        ));
+    }
 
 }
+
+sub _build__finder_objects {
+    my ($self) = @_;
+    if ( $self->has_finder ) {
+        my @out;
+        for my $finder ( @{ $self->finder } ) {
+            my $plugin = $self->zilla->plugin_named($finder);
+            if ( not $plugin ) {
+                $self->log_fatal("no plugin named $finder found");
+            }
+            if ( not $plugin->does('Dist::Zilla::Role::FileFinder') ) {
+                $self->log_fatal("plugin $finder is not a FileFinder");
+            }
+            push @out, $plugin;
+        }
+        return \@out;
+    }
+    return [ $self->_vivify_installmodules_pm_finder ];
+}
+
+sub _vivify_installmodules_pm_finder {
+    my ($self) = @_;
+    my $name = $self->plugin_name;
+    $name .= '/AUTOVIV/:InstallModulesPM';
+    if ( my $plugin = $self->zilla->plugin_named($name) ) {
+        return $plugin;
+    }
+    require Dist::Zilla::Plugin::FinderCode;
+    my $plugin = Dist::Zilla::Plugin::FinderCode->new(
+        {
+            plugin_name => $name,
+            zilla       => $self->zilla,
+            style       => 'grep',
+            code        => sub {
+                my ( $file, $self ) = @_;
+                local $_ = $file->name;
+                ## no critic (RegularExpressions)
+                return 1 if m{\Alib/} and m{\.(pm)$};
+                return 1 if $_ eq $self->zilla->main_module;
+                return;
+            },
+        }
+    );
+    push @{ $self->zilla->plugins }, $plugin;
+    return $plugin;
+}
+sub _found_files {
+    my ($self) = @_;
+    my %by_name;
+    for my $plugin ( @{ $self->_finder_objects } ) {
+        for my $file ( @{ $plugin->find_files } ) {
+            $by_name{ $file->name } = $file;
+        }
+    }
+    return [ values %by_name ];
+}
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 
@@ -159,6 +289,38 @@ the compile tests are to make sure the modules load.
 So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
 
 Though we may eventually provide an option to spawn additional perl processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+
+=head1 Other Important Differences to Test::Compile
+
+=head2 Finders useful, but not required
+
+C<[Test::Compile::PerModule]> supports providing an arbitrary list of files to generate compile tests
+
+    [Test::Compile::PerModule]
+    file = lib/Foo.pm
+    file = lib/Quux.pm
+
+Using this will supercede using finders to find things.
+
+=head2 Single finder only, not multiple
+
+C<[Test::Compile]> supports 2 finder keys, C<module_finder> and C<script_finder>.
+
+This module only supports one key, C<finder>, and it is expected
+that if you want to test 2 different sets of files, you'll create a seperate instance for that:
+
+    -[Test::Compile]
+    -module_finder = Foo
+    -script_finder = bar
+    +[Test::Compile::PerModule / module compile tests]
+    +finder = Foo
+    +[Test::Compile::PerModule / script compile tests]
+    +finder = bar
+
+This is harder to do with C<[Test::Compile]>, because you'd have to declare a seperate file name for it to work,
+where-as C<[Test::Compile::PerModule]> generates a unique filename for each source it tests.
+
+Collisions are still possible, but harder to hit by accident.
 
 =head1 AUTHOR
 
