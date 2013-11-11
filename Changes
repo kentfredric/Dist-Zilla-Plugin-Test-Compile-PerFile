@@ -1,5 +1,5 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
- - First version.
+ - First version. Not feature compatible with Test::Compile
 

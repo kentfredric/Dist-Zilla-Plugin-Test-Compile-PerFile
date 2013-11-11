@@ -1,2 +1,2 @@
 .build
-Dist-Zilla-Plugin-Test-Compile-PerModule-*
+Dist-Zilla-Plugin-Test-Compile-PerFile-*
