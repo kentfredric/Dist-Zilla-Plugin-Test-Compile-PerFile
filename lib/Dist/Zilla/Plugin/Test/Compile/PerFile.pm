@@ -27,7 +27,7 @@ our %path_translators;
 
 $path_translators{base64_filter} = sub {
   my ($file) = @_;
-  $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
+  $file =~ s/[^-\p{PosixAlnum}_]+/_/msxg;
   return $file;
 };
 
@@ -49,9 +49,9 @@ if (0) {
   $path_translators{module_names} = sub {
     my ($file) = @_;
     return $file if $file !~ /\Alib\//msx;
-    return $file if $file !~ /\.pm\z/msx;
+    return $file if $file !~ /[.]pm\z/msx;
     $file =~ s{\Alib/}{}msx;
-    $file =~ s{\.pm\z}{}msx;
+    $file =~ s{[.]pm\z}{}msx;
     $file =~ s{/}{::}msxg;
     $file = 'module/' . $file;
     return $file;
@@ -94,7 +94,7 @@ around dump_config => sub {
   $own_config->{finder}          = $self->finder if $self->has_finder;
   $own_config->{path_translator} = $self->path_translator;
   $own_config->{test_template}   = $self->test_template;
-  $config->{ '' . __PACKAGE__ }  = $own_config;
+  $config->{ q[]. __PACKAGE__ }  = $own_config;
   return $config;
 };
 
@@ -104,6 +104,7 @@ sub BUILD {
   return if $self->has_file;
   return if $self->has_finder;
   $self->_finder_objects;
+  return;
 }
 
 
@@ -166,7 +167,7 @@ sub gather_files {
     $self->log_debug("Adding $name for $file");
     $self->add_file( $self->_generate_file( $name, $file ) );
   }
-
+  return;
 }
 
 has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1, init_arg => undef );
