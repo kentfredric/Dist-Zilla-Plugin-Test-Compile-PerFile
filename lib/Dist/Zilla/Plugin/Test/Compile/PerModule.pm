@@ -117,6 +117,10 @@ sub gather_files {
 
     my $template;
 
+    if ( not @{ $self->file } ) {
+        $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
+        return;
+    }
     for my $file ( @{ $self->file } ) {
         my $name = $prefix . $translator->($file) . '.t';
         $self->log_debug("Adding $name for $file");
