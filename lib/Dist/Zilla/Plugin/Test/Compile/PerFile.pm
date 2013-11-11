@@ -21,54 +21,53 @@ use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
 
-## 
+my $WANT_MODULE_NAMES = 0;
+
+our %path_translators;
+
+$path_translators{base64_filter} = sub {
+  my ($file) = @_;
+  $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
+  return $file;
+};
+
+$path_translators{mimic_source} = sub {
+  my ($file) = @_;
+  return $file;
+};
+
+##
 #
-# This really example code, because this notation is so unrecommended, as Colons in file names 
+# This really example code, because this notation is so unrecommended, as Colons in file names
 # are highly non-portable.
 #
 # Edit this to = 1 if you're 100% serious you want this.
 #
 ##
 
-my $WANT_MODULE_NAMES = 0;
-
-our %path_translators = (
-  base64_filter => sub {
+if (0) {
+  $path_translators{module_names} = sub {
     my ($file) = @_;
-    $file =~ s/[^-\p{PosixAlnum}_]+/_/g;
+    return $file if $file !~ /\Alib\//msx;
+    return $file if $file !~ /\.pm\z/msx;
+    $file =~ s{\Alib/}{}msx;
+    $file =~ s{\.pm\z}{}msx;
+    $file =~ s{/}{::}msxg;
+    $file = 'module/' . $file;
     return $file;
-  },
-  mimic_source => sub {
-    my ($file) = @_;
-    return $file;
-  },
-  (
-    $WANT_MODULE_NAMES
-    ? (
-      module_names => sub {
-        my ($file) = @_;
-        return $file if $file !~ /\Alib\//msx;
-        return $file if $file !~ /\.pm\z/msx;
-        $file =~ s{\Alib/}{}msx;
-        $file =~ s{\.pm\z}{}msx;
-        $file =~ s{/}{::}msxg;
-        $file = 'module/' . $file;
-        return $file;
-      }
-      )
-    : ()
-  ),
-
-);
+  };
+}
 
 our %templates = ();
 
-my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
-my $template_dir = path($dist_dir);
-for my $file ( $template_dir->children ) {
-  next if $file =~ /\A\./msx;    # Skip hidden files
-  next if -d $file;              # Skip directories
-  $templates{ $file->basename } = $file;
+{
+    my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+    my $template_dir = path($dist_dir);
+    for my $file ( $template_dir->children ) {
+      next if $file =~ /\A\./msx;    # Skip hidden files
+      next if -d $file;              # Skip directories
+      $templates{ $file->basename } = $file;
+    }
 }
 
 around mvp_multivalue_args => sub {
@@ -82,6 +81,20 @@ around mvp_aliases => sub {
   $hash = {} if not defined $hash;
   $hash->{file} = 'files';
   return $hash;
+};
+
+around dump_config => sub {
+    my ( $orig, $self, @args ) = @_;
+    my $config = $self->$orig( @args );
+    my $own_config = {};
+    $own_config->{xt_mode} = $self->xt_mode;
+    $own_config->{prefix}  = $self->prefix;
+    $own_config->{file}    = $self->file;
+    $own_config->{finder}  = $self->finder if $self->has_finder;
+    $own_config->{path_translator} = $self->path_translator; 
+    $own_config->{test_template} = $self->test_template;
+    $config->{'' . __PACKAGE__ } = $own_config;
+    return $config;
 };
 
 has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
