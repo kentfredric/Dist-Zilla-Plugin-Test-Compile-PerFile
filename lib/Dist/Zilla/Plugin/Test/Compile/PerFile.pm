@@ -98,6 +98,7 @@ around dump_config => sub {
   return $config;
 };
 
+
 sub BUILD {
   my ($self) = @_;
   return if $self->has_file;
@@ -306,11 +307,11 @@ This module is inspired by its earlier sibling L<< C<[Test::Compile]>|Dist::Zill
 Test::Compile is awesome, however, in the process of its development, we discovered it might be useful
 to run compilation tests in parallel.
 
-This lead to the realisation that implementing said functions are kinda messy.
+This lead to the realization that implementing said functions are kinda messy.
 
-However, a further realisation is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
+However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
 
-And this lead to the realisation that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
+And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
 
 Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy parallelism-induced bugs )
 
@@ -323,7 +324,7 @@ So, here is the Test::Compile model based on how development is currently procee
      |
      \ ----- 01_basic.t
 
-That may be fine for some people, but this approach has several fundemental limits:
+That may be fine for some people, but this approach has several fundamental limits:
 
 =over 4
 
@@ -341,7 +342,7 @@ That may be fine for some people, but this approach has several fundemental limi
 
 So this variation aims to employ one test file per module, to leverage C<prove> power.
 
-One initial concern cropped up on the notion of having excessive numbers of perl instances, ie:
+One initial concern cropped up on the notion of having excessive numbers of C<perl> instances, e.g:
 
     prove
       \ ----- 00_compile/01_Module_1.t
@@ -355,7 +356,7 @@ One initial concern cropped up on the notion of having excessive numbers of perl
 If we were to implement it this way, we'd have the fun overhead of having to spawn B<2> C<perl> instances
 per module tested, which on C<Win32>, would roughly double the test time and give nothing in return.
 
-However, B<Most> of the reason for having a perl process per compile, was to seperate the modules from each other
+However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
 to assure they could be loaded independently.
 
 So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many modules as we have.
@@ -364,17 +365,17 @@ So because we already have a basically empty compile-state per test, we can redu
       \ ----- 00_compile/01_Module_1.t
      |
       \ ----- 00_compile/02_Module_2.t
-    |
+     |
      \ ----- 01_basic.t
 
-Granted, there is still some blead here, because doing it like this means you have some modules pre-loaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
+Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
 
 However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
 the compile tests are to make sure the modules load.
 
 So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
 
-Though we may eventually provide an option to spawn additional perl processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
 
 =head1 ATTRIBUTES
 
@@ -437,7 +438,7 @@ I<If not specified>, a custom one is autovivified, and matches only C<*.pm> in C
 I<optional> B<<Str>>
 
 A Name of a routine to translate source paths ( i.e: Paths to modules/scripts that are to be compiled )
-into test filenames.
+into test file names.
 
 I<Default> is C<base64_filter>
 
@@ -466,7 +467,7 @@ This is the default, but not nessecarily the most sane if you have unusual filen
     lib/Foo/Bar.pm
     lib/Foo_Bar.pm
 
-This configuratin will not work with this translater.
+This configuration will not work with this translator.
 
 =item * C<mimic_source>
 
@@ -529,7 +530,7 @@ C<[Test::Compile::PerFile]> supports providing an arbitrary list of files to gen
     file = lib/Foo.pm
     file = lib/Quux.pm
 
-Using this will supercede using finders to find things.
+Using this will supersede using finders to find things.
 
 =head2 Single finder only, not multiple
 
@@ -558,7 +559,7 @@ Under the hood, C<Test::Compile> is really file oriented too, it just doesn't gi
 It just seemed fundementally less complex to deal only in file paths for this module, as it gives
 no illusions as to what it can, and cannot do.
 
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a filename and a module name are missmatching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resovled to files )
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a filename and a module name are missmatching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
 
 =head1 Performance
 
@@ -582,6 +583,8 @@ Though, comparing compile tests alone:
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
 Thats not bad, considering that although I have 4 logical CPUS, thats really just 2 physical cpus with hyperthreading ;)
+
+=for Pod::Coverage BUILD
 
 =head1 AUTHOR
 
