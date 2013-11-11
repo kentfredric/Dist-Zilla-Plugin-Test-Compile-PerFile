@@ -190,7 +190,7 @@ ATTRIBUTES
             lib_Foo_pm.t
             lib_Foo_Quux.t
 
-        This is the default, but not nessecarily the most sane if you have
+        This is the default, but not necessarily the most sane if you have
         unusual file naming.
 
             lib/Foo/Bar.pm
@@ -319,8 +319,8 @@ Performance
         prove -j4lr --timer t/00-compile/
         Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
-    That's not bad, considering that although I have 4 logical "CPUs", thats
-    really just 2 physical "CPUs" with hyperthreading ;)
+    That's not bad, considering that although I have 4 logical "CPUs",
+    that's really just 2 physical "CPUs" with hyper-threading ;)
 
 AUTHOR
     Kent Fredric <kentfredric@gmail.com>

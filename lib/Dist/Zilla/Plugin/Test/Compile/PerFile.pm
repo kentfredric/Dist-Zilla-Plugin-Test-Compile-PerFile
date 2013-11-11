@@ -476,7 +476,7 @@ That the generated test files will be in the C<prefix> directory named:
     lib_Foo_pm.t
     lib_Foo_Quux.t
 
-This is the default, but not nessecarily the most sane if you have unusual file naming.
+This is the default, but not necessarily the most sane if you have unusual file naming.
 
     lib/Foo/Bar.pm
     lib/Foo_Bar.pm
@@ -596,7 +596,7 @@ Though, comparing compile tests alone:
     prove -j4lr --timer t/00-compile/
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
-That's not bad, considering that although I have 4 logical C<CPUs>, thats really just 2 physical C<CPUs> with hyperthreading ;)
+That's not bad, considering that although I have 4 logical C<CPUs>, that's really just 2 physical C<CPUs> with hyper-threading ;)
 
 =for Pod::Coverage BUILD
 
