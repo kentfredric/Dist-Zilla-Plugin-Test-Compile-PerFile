@@ -61,18 +61,18 @@ if (0) {
 our %templates = ();
 
 {
-    my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
-    my $template_dir = path($dist_dir);
-    for my $file ( $template_dir->children ) {
-      next if $file =~ /\A\./msx;    # Skip hidden files
-      next if -d $file;              # Skip directories
-      $templates{ $file->basename } = $file;
-    }
+  my $dist_dir     = dist_dir('Dist-Zilla-Plugin-Test-Compile-PerModule');
+  my $template_dir = path($dist_dir);
+  for my $file ( $template_dir->children ) {
+    next if $file =~ /\A\./msx;    # Skip hidden files
+    next if -d $file;              # Skip directories
+    $templates{ $file->basename } = $file;
+  }
 }
 
 around mvp_multivalue_args => sub {
   my ( $orig, $self, @args ) = @_;
-  return ( 'finder', 'file', 'files', $self->$orig(@args) );
+  return ( 'finder', 'file', 'files', 'skip', $self->$orig(@args) );
 };
 
 around mvp_aliases => sub {
@@ -84,22 +84,27 @@ around mvp_aliases => sub {
 };
 
 around dump_config => sub {
-    my ( $orig, $self, @args ) = @_;
-    my $config = $self->$orig( @args );
-    my $own_config = {};
-    $own_config->{xt_mode} = $self->xt_mode;
-    $own_config->{prefix}  = $self->prefix;
-    $own_config->{file}    = $self->file;
-    $own_config->{finder}  = $self->finder if $self->has_finder;
-    $own_config->{path_translator} = $self->path_translator;
-    $own_config->{test_template} = $self->test_template;
-    $config->{'' . __PACKAGE__ } = $own_config;
-    return $config;
+  my ( $orig, $self, @args ) = @_;
+  my $config     = $self->$orig(@args);
+  my $own_config = {};
+  $own_config->{xt_mode}         = $self->xt_mode;
+  $own_config->{prefix}          = $self->prefix;
+  $own_config->{file}            = $self->file;
+  $own_config->{skip}            = $self->skip;
+  $own_config->{finder}          = $self->finder if $self->has_finder;
+  $own_config->{path_translator} = $self->path_translator;
+  $own_config->{test_template}   = $self->test_template;
+  $config->{ '' . __PACKAGE__ }  = $own_config;
+  return $config;
 };
+
+
+
 
 has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
 has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
-has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
+has file   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
+has skip   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
 has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
@@ -119,7 +124,15 @@ sub gather_files {
     $self->log_debug("Did not find any files to add tests for, did you add any files yet?");
     return;
   }
+  my $skiplist = {};
+  for my $skip ( @{ $self->skip } ) {
+    $skiplist{$skip} = 1;
+  }
   for my $file ( @{ $self->file } ) {
+    if ( exists $skiplist->{$skip} ) {
+      $self->log_debug("Skipping compile test generation for $file");
+      next;
+    }
     my $name = $prefix . $translator->($file) . '.t';
     $self->log_debug("Adding $name for $file");
     $self->add_file(
@@ -352,6 +365,149 @@ So this is an acceptable caveat for this module, and if you wish to be distinct 
 
 Though we may eventually provide an option to spawn additional perl processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
 
+=head1 ATTRIBUTES
+
+=head2 C<xt_mode>
+
+I<optional> B<< C<Bool> >>
+
+    xt_mode = 1
+
+If set, C<prefix> defaults to C<xt/author/00-compile>
+
+I<Default> is B<NOT SET>
+
+=head2 C<prefix>
+
+I<optional> B<< C<Str> >>
+
+    prefix = t/99-compilerthingys
+
+If set, sets the prefix path for generated tests to go in.
+
+I<Defaults> to C<t/00-compile>
+
+=head2 C<file>
+
+I<optional> B<< C<multivalue_arg> >> B<< C<ArrayRef[Str]> >>
+
+B<< C<mvp_aliases> >>: C<files>
+
+    file = lib/Foo.pm
+    file = lib/Bar.pm
+    files = lib/Quux.pm
+    file = script/whatever.pl
+
+Specifies the list of source files to generate compile tests for.
+
+I<If not specified>, defaults are populated from the file finder C<finder>
+
+=head2 C<skip>
+
+I<optional> B<< C<multivalue_arg> >> B<< C<ArrayRef[Str]> >>
+
+    skip = lib/Foo.pm
+
+Specifies the list of source files to skip compile tests for.
+
+=head2 C<finder>
+
+I<optional> B<< C<multivalue_arg> >> B<< C<ArrayRef[Str]> >>
+
+    finder = :InstallModules
+
+Specifies a L<< C<FileFinder>|Dist::Zilla::Role::FileFinder >> plugin name
+to query for a list of files to build compile tests for.
+
+I<If not specified>, a custom one is autovivified, and matches only C<*.pm> in C<lib/>
+
+=head2 C<path_translator>
+
+I<optional> B<<Str>>
+
+A Name of a routine to translate source paths ( i.e: Paths to modules/scripts that are to be compiled )
+into test filenames.
+
+I<Default> is C<base64_filter>
+
+Supported Values:
+
+=over 4
+
+=item * C<base64_filter>
+
+Paths are L<< mangled so that they contain only base64 web-safe elements|http://tools.ietf.org/html/rfc3548#section-4 >>
+
+That is to say, if you were building tests for a distribution with this layout:
+
+    lib/Foo/Bar.pm
+    lib/Foo.pm
+    lib/Foo_Quux.pm
+
+That the generated test files will be in the C<prefix> directory named:
+
+    lib_Foo_Bar_pm.t
+    lib_Foo_pm.t
+    lib_Foo_Quux.t
+
+This is the default, but not nessecarily the most sane if you have unusual filenaming.
+
+    lib/Foo/Bar.pm
+    lib/Foo_Bar.pm
+
+This configuratin will not work with this translater.
+
+=item * C<mimic_source>
+
+This is mostly a 1:1 mapping, it doesn't translate source names in any way, other than prefixing and suffixing,
+which is standard regardless of translation chosen.
+
+    lib/Foo/Bar.pm
+    lib/Foo.pm
+    lib/Foo_Quux.pm
+
+Will emit a prefix directory populated as such
+
+    lib/Foo/Bar.pm.t
+    lib/Foo.pm.t
+    lib/Foo_Quux.pm.t
+
+Indeed, if you had a death wish, you could set C<prefix = lib> and your final layout would be:
+
+    lib/Foo/Bar.pm
+    lib/Foo/Bar.pm.t
+    lib/Foo.pm
+    lib/Foo.pm.t
+    lib/Foo_Quux.pm
+    lib/Foo_Quux.pm.t
+
+Though this is not advised, and is only given for an example.
+
+=back
+
+=head2 C<test_template>
+
+Contains the string of the template file you wish to use as a reference point.
+
+Unlike most plugins, which use L<< C<Data::Section>|Data::Section >> to provide their templates,
+this plugin uses a L<< C<File::ShareDir> C<dist_dir>|File::ShareDir >> to distribute templates.
+
+This means there will always be a predetermined list of templates shipped by this plugin,
+however, if you wish to modify these templates and store them with a non-colliding name, for your personal convenience,
+you are entirely free to so.
+
+As such, this field takes as its parameter, the name of any file that happened to be in the C<dist_dir> at compile time.
+
+Provided Templates:
+
+=over 4
+
+=item * C<01-basic.t.tpl>
+
+A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing else.
+
+=back
+
 =head1 Other Important Differences to Test::Compile
 
 =head2 Finders useful, but not required
@@ -383,6 +539,15 @@ This is harder to do with C<[Test::Compile]>, because you'd have to declare a se
 where-as C<[Test::Compile::PerFile]> generates a unique filename for each source it tests.
 
 Collisions are still possible, but harder to hit by accident.
+
+=head2 File Oriented, not Module Oriented
+
+Under the hood, C<Test::Compile> is really file oriented too, it just doesn't give that impression on the box.
+
+It just seemed fundementally less complex to deal only in file paths for this module, as it gives
+no illusions as to what it can, and cannot do.
+
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a filename and a module name are missmatching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resovled to files )
 
 =head1 Performance
 

@@ -101,6 +101,145 @@ DESCRIPTION
     improve efficiency of tests, not to decrease them, that would be an
     approach counter-productive to this modules purpose.
 
+ATTRIBUTES
+  "xt_mode"
+    *optional* "Bool"
+
+        xt_mode = 1
+
+    If set, "prefix" defaults to "xt/author/00-compile"
+
+    *Default* is NOT SET
+
+  "prefix"
+    *optional* "Str"
+
+        prefix = t/99-compilerthingys
+
+    If set, sets the prefix path for generated tests to go in.
+
+    *Defaults* to "t/00-compile"
+
+  "file"
+    *optional* "multivalue_arg" "ArrayRef[Str]"
+
+    "mvp_aliases": "files"
+
+        file = lib/Foo.pm
+        file = lib/Bar.pm
+        files = lib/Quux.pm
+        file = script/whatever.pl
+
+    Specifies the list of source files to generate compile tests for.
+
+    *If not specified*, defaults are populated from the file finder "finder"
+
+  "skip"
+    *optional* "multivalue_arg" "ArrayRef[Str]"
+
+        skip = lib/Foo.pm
+
+    Specifies the list of source files to skip compile tests for.
+
+  "finder"
+    *optional* "multivalue_arg" "ArrayRef[Str]"
+
+        finder = :InstallModules
+
+    Specifies a "FileFinder" plugin name to query for a list of files to
+    build compile tests for.
+
+    *If not specified*, a custom one is autovivified, and matches only
+    "*.pm" in "lib/"
+
+  "path_translator"
+    *optional* <Str>
+
+    A Name of a routine to translate source paths ( i.e: Paths to
+    modules/scripts that are to be compiled ) into test filenames.
+
+    *Default* is "base64_filter"
+
+    Supported Values:
+
+    *   "base64_filter"
+
+        Paths are mangled so that they contain only base64 web-safe elements
+        <http://tools.ietf.org/html/rfc3548#section-4>
+
+        That is to say, if you were building tests for a distribution with
+        this layout:
+
+            lib/Foo/Bar.pm
+            lib/Foo.pm
+            lib/Foo_Quux.pm
+
+        That the generated test files will be in the "prefix" directory
+        named:
+
+            lib_Foo_Bar_pm.t
+            lib_Foo_pm.t
+            lib_Foo_Quux.t
+
+        This is the default, but not nessecarily the most sane if you have
+        unusual filenaming.
+
+            lib/Foo/Bar.pm
+            lib/Foo_Bar.pm
+
+        This configuratin will not work with this translater.
+
+    *   "mimic_source"
+
+        This is mostly a 1:1 mapping, it doesn't translate source names in
+        any way, other than prefixing and suffixing, which is standard
+        regardless of translation chosen.
+
+            lib/Foo/Bar.pm
+            lib/Foo.pm
+            lib/Foo_Quux.pm
+
+        Will emit a prefix directory populated as such
+
+            lib/Foo/Bar.pm.t
+            lib/Foo.pm.t
+            lib/Foo_Quux.pm.t
+
+        Indeed, if you had a death wish, you could set "prefix = lib" and
+        your final layout would be:
+
+            lib/Foo/Bar.pm
+            lib/Foo/Bar.pm.t
+            lib/Foo.pm
+            lib/Foo.pm.t
+            lib/Foo_Quux.pm
+            lib/Foo_Quux.pm.t
+
+        Though this is not advised, and is only given for an example.
+
+  "test_template"
+    Contains the string of the template file you wish to use as a reference
+    point.
+
+    Unlike most plugins, which use "Data::Section" to provide their
+    templates, this plugin uses a "File::ShareDir" "dist_dir" to distribute
+    templates.
+
+    This means there will always be a predetermined list of templates
+    shipped by this plugin, however, if you wish to modify these templates
+    and store them with a non-colliding name, for your personal convenience,
+    you are entirely free to so.
+
+    As such, this field takes as its parameter, the name of any file that
+    happened to be in the "dist_dir" at compile time.
+
+    Provided Templates:
+
+    *   "01-basic.t.tpl"
+
+        A very basic standard template, which "use"'s "Test::More", does a
+        "requires_ok($file)" for the requested file, and nothing else.
+
 Other Important Differences to Test::Compile
   Finders useful, but not required
     "[Test::Compile::PerFile]" supports providing an arbitrary list of files
@@ -134,6 +273,19 @@ Other Important Differences to Test::Compile
     it tests.
 
     Collisions are still possible, but harder to hit by accident.
+
+  File Oriented, not Module Oriented
+    Under the hood, "Test::Compile" is really file oriented too, it just
+    doesn't give that impression on the box.
+
+    It just seemed fundementally less complex to deal only in file paths for
+    this module, as it gives no illusions as to what it can, and cannot do.
+
+    ( For example, by being clearly file oriented, there's no ambiguity of
+    how it will behave when a filename and a module name are missmatching in
+    some way, by simply not caring about the latter , it will also never
+    attempt to probe and load modules that can't be automatically resovled
+    to files )
 
 Performance
     A rough comparison on the "dzil" git tree, with "HARNESS_OPTIONS=j4:c"
