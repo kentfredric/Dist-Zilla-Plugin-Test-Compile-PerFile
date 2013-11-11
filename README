@@ -33,7 +33,7 @@ DESCRIPTION
     So, here is the Test::Compile model based on how development is
     currently proceeding.
 
-        prove 
+        prove
           \ ----- 00_compile.t
          |           \ ----- Compile Module 1
          |           \ ----- Compile Module 2
@@ -56,7 +56,7 @@ DESCRIPTION
     One initial concern cropped up on the notion of having excessive numbers
     of perl instances, ie:
 
-        prove 
+        prove
           \ ----- 00_compile/01_Module_1.t
          |           \ ----- Compile Module 1
          |
@@ -76,7 +76,7 @@ DESCRIPTION
     So because we already have a basically empty compile-state per test, we
     can reduce the number of "perl" processes to as many modules as we have.
 
-        prove 
+        prove
           \ ----- 00_compile/01_Module_1.t
          |
           \ ----- 00_compile/02_Module_2.t

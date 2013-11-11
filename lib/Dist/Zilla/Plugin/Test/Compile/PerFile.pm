@@ -91,7 +91,7 @@ around dump_config => sub {
     $own_config->{prefix}  = $self->prefix;
     $own_config->{file}    = $self->file;
     $own_config->{finder}  = $self->finder if $self->has_finder;
-    $own_config->{path_translator} = $self->path_translator; 
+    $own_config->{path_translator} = $self->path_translator;
     $own_config->{test_template} = $self->test_template;
     $config->{'' . __PACKAGE__ } = $own_config;
     return $config;
@@ -292,7 +292,7 @@ Which means implementing another layer of parallelism is unwanted and unproducti
 
 So, here is the Test::Compile model based on how development is currently proceeding.
 
-    prove 
+    prove
       \ ----- 00_compile.t
      |           \ ----- Compile Module 1
      |           \ ----- Compile Module 2
@@ -319,7 +319,7 @@ So this variation aims to employ one test file per module, to leverage C<prove> 
 
 One initial concern cropped up on the notion of having excessive numbers of perl instances, ie:
 
-    prove 
+    prove
       \ ----- 00_compile/01_Module_1.t
      |           \ ----- Compile Module 1
      |
@@ -336,7 +336,7 @@ to assure they could be loaded independently.
 
 So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many modules as we have.
 
-    prove 
+    prove
       \ ----- 00_compile/01_Module_1.t
      |
       \ ----- 00_compile/02_Module_2.t
