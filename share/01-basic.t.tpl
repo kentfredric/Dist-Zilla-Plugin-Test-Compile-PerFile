@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-# This test was generated for {{ $file }}
+# This test was generated for {{$file}}
 # using by {{ $plugin_module }} ( {{ $plugin_name }} ) version {{ $plugin_version }}
 # with template 01-basic.t.tpl
 
