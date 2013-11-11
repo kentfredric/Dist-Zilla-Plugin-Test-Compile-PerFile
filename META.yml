@@ -150,7 +150,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Test::Compile::PerModule
       name: Test::Compile::PerModule
-      version: ~
+      version: 0.001000
     -
       class: Dist::Zilla::Plugin::Git::NextVersion
       name: '@Author::KENTNL/Git::NextVersion'
