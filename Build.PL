@@ -7,17 +7,17 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   "build_requires" => {
-    "Module::Build" => "0.4008"
+    "Module::Build" => "0.4200"
   },
   "configure_requires" => {
-    "Module::Build" => "0.4008"
+    "Module::Build" => "0.4200"
   },
   "dist_abstract" => "Create a single .t for each compilable file in a distribution",
   "dist_author" => [
     "Kent Fredric <kentfredric\@gmail.com>"
   ],
   "dist_name" => "Dist-Zilla-Plugin-Test-Compile-PerFile",
-  "dist_version" => "0.001000",
+  "dist_version" => "0.001001",
   "license" => "perl",
   "module_name" => "Dist::Zilla::Plugin::Test::Compile::PerFile",
   "recommends" => {},
@@ -47,7 +47,7 @@ my %module_build_args = (
 
 
 my %fallback_build_requires = (
-  "Module::Build" => "0.4008",
+  "Module::Build" => "0.4200",
   "Test::More" => "1.001002"
 );
 

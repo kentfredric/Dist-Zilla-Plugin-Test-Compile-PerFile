@@ -6,7 +6,7 @@ BEGIN {
   $Dist::Zilla::Plugin::Test::Compile::PerFile::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001000';
+  $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001001';
 }
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
@@ -66,7 +66,7 @@ our %templates = ();
   my $template_dir = path($dist_dir);
   for my $file ( $template_dir->children ) {
     next if $file =~ /\A[.]/msx;    # Skip hidden files
-    next if -d $file;              # Skip directories
+    next if -d $file;               # Skip directories
     $templates{ $file->basename } = $file;
   }
 }
@@ -90,12 +90,12 @@ around dump_config => sub {
   my $own_config = {};
   $own_config->{xt_mode}         = $self->xt_mode;
   $own_config->{prefix}          = $self->prefix;
-  $own_config->{file}            = $self->file;
+  $own_config->{file}            = [ sort @{ $self->file } ];
   $own_config->{skip}            = $self->skip;
   $own_config->{finder}          = $self->finder if $self->has_finder;
   $own_config->{path_translator} = $self->path_translator;
   $own_config->{test_template}   = $self->test_template;
-  $config->{ q[]. __PACKAGE__ }  = $own_config;
+  $config->{ q[] . __PACKAGE__ } = $own_config;
   return $config;
 };
 
@@ -119,28 +119,27 @@ has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predica
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
 has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
 
-
-
 sub _generate_file {
-    my ( $self, $name , $file ) = @_;
-    my $code = sub {
-        return $self->fill_in_string(
-            $self->_test_template_content,
-            {
-              file              => $file,
-              plugin_module     => $self->meta->name,
-              plugin_name       => $self->plugin_name,
-              plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
-              test_more_version => '0.89',
-            }
-        );
-    };
-    return Dist::Zilla::File::FromCode->new(
-        name             => $name,
-        code_return_type => 'text',
-        code             => $code
+  my ( $self, $name, $file ) = @_;
+  my $code = sub {
+    return $self->fill_in_string(
+      $self->_test_template_content,
+      {
+        file              => $file,
+        plugin_module     => $self->meta->name,
+        plugin_name       => $self->plugin_name,
+        plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
+        test_more_version => '0.89',
+      }
     );
+  };
+  return Dist::Zilla::File::FromCode->new(
+    name             => $name,
+    code_return_type => 'text',
+    code             => $code
+  );
 }
+
 
 sub gather_files {
   my ($self) = @_;
@@ -164,7 +163,7 @@ sub gather_files {
       $self->log_debug("Skipping compile test generation for $file");
       next;
     }
-    my $name = sprintf q[%s%s.t], $prefix , $translator->($file);
+    my $name = sprintf q[%s%s.t], $prefix, $translator->($file);
     $self->log_debug("Adding $name for $file");
     $self->add_file( $self->_generate_file( $name, $file ) );
   }
@@ -298,7 +297,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.001000
+version 0.001001
 
 =head1 SYNOPSIS
 
