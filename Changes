@@ -1,6 +1,6 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.001001 2013-11-13T06:12:10Z
+0.001001 2013-11-13T06:12:19Z
  [00 Bugfix]
  - Fix sort order of files in metadata
  - Properly remove indirect develop dependence on Test::Compile
