@@ -598,5 +598,6 @@ sub _found_files {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+no Moose::Util::TypeConstraints;
 
 1;
