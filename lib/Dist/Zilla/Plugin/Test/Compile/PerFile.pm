@@ -1,9 +1,13 @@
+use 5.008;    #utf8
 use strict;
 use warnings;
+use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.002000';
 # ABSTRACT: Create a single .t for each compilable file in a distribution
+
+our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
 use Moose;
 use MooseX::LazyRequire;
