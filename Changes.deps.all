@@ -15,6 +15,9 @@
  - Dist::Zilla::Plugin::RunExtraTests
  - Dist::Zilla::Plugin::Test::ReportPrereqs
 
+ [Added / runtime requires]
+ - utf8
+
  [Added / test recommends]
  - CPAN::Meta
  - CPAN::Meta::Requirements 2.120900
@@ -29,6 +32,9 @@
 
  [Changed / develop requires]
  - Dist::Zilla::PluginBundle::Author::KENTNL 2.002000 → 2.013003
+
+ [Changed / runtime requires]
+ - perl 5.006001 → 5.008
 
  [Changed / test requires]
  - Test::More 1.001002 → 0.89
