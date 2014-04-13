@@ -168,8 +168,6 @@ use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
 
-my $WANT_MODULE_NAMES = 0;
-
 ## no critic (ProhibitPackageVars)
 our %path_translators;
 
@@ -428,13 +426,13 @@ sub _generate_file {
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
         test_more_version => '0.89',
-      }
+      },
     );
   };
   return Dist::Zilla::File::FromCode->new(
     name             => $name,
     code_return_type => 'text',
-    code             => $code
+    code             => $code,
   );
 }
 
@@ -494,7 +492,7 @@ sub _build_prefix {
 }
 
 sub _build_path_translator {
-  my ($self) = @_;
+  my (undef,) = @_;
   return 'base64_filter';
 }
 
@@ -569,7 +567,7 @@ sub _vivify_installmodules_pm_finder {
         return 1 if $_ eq $self->zilla->main_module;
         return;
       },
-    }
+    },
   );
   push @{ $self->zilla->plugins }, $plugin;
   return $plugin;
