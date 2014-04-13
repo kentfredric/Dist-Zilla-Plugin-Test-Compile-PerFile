@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 # VERSION
 
-version 0.001001
+version 0.001002
 
 # SYNOPSIS
 
@@ -37,11 +37,11 @@ So, here is the Test::Compile model based on how development is currently procee
 
 That may be fine for some people, but this approach has several fundamental limits:
 
-1. Sub-Tasks of compile don't get load balanced by the master harness.
-2. Parallelism is developer side, not deployment side governed.
-3. This approach means `prove -s` will have no impact.
-4. This approach means `prove -j` will have no impact.
-5. This approach inhibits other features of `prove` such as the `--state=slow`
+- 1. Sub-Tasks of compile don't get load balanced by the master harness.
+- 2. Parallelism is developer side, not deployment side governed.
+- 3. This approach means `prove -s` will have no impact.
+- 4. This approach means `prove -j` will have no impact.
+- 5. This approach inhibits other features of `prove` such as the `--state=slow`
 
 So this variation aims to employ one test file per module, to leverage `prove` power.
 
@@ -294,7 +294,7 @@ Kent Fredric <kentfredric@gmail.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Kent Fredric <kentfredric@gmail.com>.
+This software is copyright (c) 2014 by Kent Fredric <kentfredric@gmail.com>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
