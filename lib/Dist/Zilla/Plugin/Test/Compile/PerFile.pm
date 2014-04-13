@@ -28,11 +28,14 @@ to run compilation tests in parallel.
 
 This lead to the realization that implementing said functions are kinda messy.
 
-However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
+However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is
+rather not very portable, so parallelism should only be enabled when asked for.
 
-And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
+And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a
+safe way for platforms to indicate parallelism is wanted.
 
-Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy parallelism-induced bugs )
+Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy
+parallelism-induced bugs )
 
 So, here is the Test::Compile model based on how development is currently proceeding.
 
@@ -79,7 +82,8 @@ per module tested, which on C<Win32>, would roughly double the test time and giv
 However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
 to assure they could be loaded independently.
 
-So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many modules as we have.
+So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many
+modules as we have.
 
     prove
       \ ----- 00_compile/01_Module_1.t
@@ -89,14 +93,18 @@ So because we already have a basically empty compile-state per test, we can redu
      \ ----- 01_basic.t
 
 
-Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
+Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the
+module in question, namely, that C<Test::*> will be in scope.
 
 However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
 the compile tests are to make sure the modules load.
 
-So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
+So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the
+much more proven C<[Test::Compile]>.
 
-Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour,
+the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to
+decrease them, that would be an approach counter-productive to this modules purpose.
 
 =head1 Other Important Differences to Test::Compile
 
@@ -137,7 +145,9 @@ Under the hood, C<Test::Compile> is really file oriented too, it just doesn't gi
 It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
 no illusions as to what it can, and cannot do.
 
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are
+miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't
+be automatically resolved to files )
 
 =head1 Performance
 
@@ -403,7 +413,8 @@ Provided Templates:
 
 =item * C<01-basic.t.tpl>
 
-A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing else.
+A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing
+else.
 
 =back
 
@@ -440,10 +451,11 @@ sub _generate_file {
 
 =method C<gather_files>
 
-This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only happens at this phase.
+This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only
+happens at this phase.
 
-The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given file,
-the test itself must be included B<after> that file is gathered.
+The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given
+file, the test itself must be included B<after> that file is gathered.
 
 =cut
 
