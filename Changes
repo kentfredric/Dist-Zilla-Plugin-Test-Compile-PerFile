@@ -1,6 +1,8 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
+ [00 Major]
+ - Toolking Switched to EUMM.soft
 
 0.001001 2013-11-13T10:47:34Z
  [00 Bugfix]
