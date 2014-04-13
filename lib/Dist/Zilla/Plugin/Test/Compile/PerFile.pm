@@ -5,6 +5,8 @@ package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
+# AUTHORITY
+
 use Moose;
 use MooseX::LazyRequire;
 
