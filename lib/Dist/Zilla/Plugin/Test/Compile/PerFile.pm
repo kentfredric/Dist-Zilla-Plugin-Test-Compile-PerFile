@@ -9,7 +9,7 @@ package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
 # AUTHORITY
 
-use Moose;
+use Moose qw( with around has );
 use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
