@@ -178,8 +178,6 @@ use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
 
-my $WANT_MODULE_NAMES = 0;
-
 ## no critic (ProhibitPackageVars)
 our %path_translators;
 
@@ -506,7 +504,7 @@ sub _build_prefix {
 }
 
 sub _build_path_translator {
-  my ($self) = @_;
+  my (undef,) = @_;
   return 'base64_filter';
 }
 
