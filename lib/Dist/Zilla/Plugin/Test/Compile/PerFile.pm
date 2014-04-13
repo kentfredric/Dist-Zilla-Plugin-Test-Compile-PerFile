@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
-$Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001002';
+$Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.002000';
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
 use Moose;
@@ -599,7 +599,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.001002
+version 0.002000
 
 =head1 SYNOPSIS
 
