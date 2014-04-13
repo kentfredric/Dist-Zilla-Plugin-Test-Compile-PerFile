@@ -1,24 +1,34 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.002000 2014-04-13T03:23:15Z
+ [00 Major]
+ - Toolking Switched to EUMM.soft
+
+ [Dependencies::Aggregate]
+ - 5.008 : 199 → 202
+ - 5.010 : 177 → 182
+ - 5.019 : 161 → 160
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.001001, see Changes.deps{,.all,.dev} for
+   details
+ - build: -1
+ - configure: +2 -1 (recommends: +1)
+ - develop: +7 ↑1 -9
+ - runtime: +1 ↑1
+ - test: +4 ↓1 (recommends: +4)
+
 0.001001 2013-11-13T10:47:34Z
  [00 Bugfix]
  - Fix sort order of files in metadata
  - Properly remove indirect develop dependence on Test::Compile
 
- [Dependencies::Added / develop requires]
- - Dist::Zilla::Plugin::Test::Compile::PerFile
-
- [Dependencies::Changed / build requires]
- - Module::Build 0.4008 → 0.4200
-
- [Dependencies::Changed / configure requires]
- - Module::Build 0.4008 → 0.4200
-
- [Dependencies::Changed / develop requires]
- - Dist::Zilla::PluginBundle::Author::KENTNL 2.001000 → 2.002000
-
- [Dependencies::Removed / develop requires]
- - Dist::Zilla::Plugin::Test::Compile
+ [Dependencies::Stats]
+ - Dependencies changed since 0.001000, see Changes.deps{,.all,.dev} for
+   details
+ - build: ↑1
+ - configure: ↑1
+ - develop: +1 ↑1 -1
 
 0.001000 2013-11-11T09:33:58Z
  - First version. Not feature compatible with Test::Compile

@@ -1,27 +1,182 @@
+use 5.008;    #utf8
 use strict;
 use warnings;
+use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
-BEGIN {
-  $Dist::Zilla::Plugin::Test::Compile::PerFile::AUTHORITY = 'cpan:KENTNL';
-}
-{
-  $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001001';
-}
-
+$Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.002000';
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
-use Moose;
+our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
+
+use Moose qw( with around has );
 use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
-
-my $WANT_MODULE_NAMES = 0;
 
 ## no critic (ProhibitPackageVars)
 our %path_translators;
@@ -100,6 +255,13 @@ around dump_config => sub {
 };
 
 
+
+
+
+
+
+
+
 sub BUILD {
   my ($self) = @_;
   return if $self->has_file;
@@ -107,6 +269,151 @@ sub BUILD {
   $self->_finder_objects;
   return;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -130,15 +437,24 @@ sub _generate_file {
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
         test_more_version => '0.89',
-      }
+      },
     );
   };
   return Dist::Zilla::File::FromCode->new(
     name             => $name,
     code_return_type => 'text',
-    code             => $code
+    code             => $code,
   );
 }
+
+
+
+
+
+
+
+
+
 
 
 sub gather_files {
@@ -188,7 +504,7 @@ sub _build_prefix {
 }
 
 sub _build_path_translator {
-  my ($self) = @_;
+  my (undef,) = @_;
   return 'base64_filter';
 }
 
@@ -263,7 +579,7 @@ sub _vivify_installmodules_pm_finder {
         return 1 if $_ eq $self->zilla->main_module;
         return;
       },
-    }
+    },
   );
   push @{ $self->zilla->plugins }, $plugin;
   return $plugin;
@@ -282,6 +598,7 @@ sub _found_files {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+no Moose::Util::TypeConstraints;
 
 1;
 
@@ -297,7 +614,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.001001
+version 0.002000
 
 =head1 SYNOPSIS
 
@@ -313,11 +630,14 @@ to run compilation tests in parallel.
 
 This lead to the realization that implementing said functions are kinda messy.
 
-However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is rather not very portable, so parallelism should only be enabled when asked for.
+However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is
+rather not very portable, so parallelism should only be enabled when asked for.
 
-And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a safe way for platforms to indicate parallelism is wanted.
+And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a
+safe way for platforms to indicate parallelism is wanted.
 
-Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy parallelism-induced bugs )
+Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy
+parallelism-induced bugs )
 
 So, here is the Test::Compile model based on how development is currently proceeding.
 
@@ -363,7 +683,8 @@ per module tested, which on C<Win32>, would roughly double the test time and giv
 However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
 to assure they could be loaded independently.
 
-So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many modules as we have.
+So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many
+modules as we have.
 
     prove
       \ ----- 00_compile/01_Module_1.t
@@ -372,23 +693,28 @@ So because we already have a basically empty compile-state per test, we can redu
      |
      \ ----- 01_basic.t
 
-Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the module in question, namely, that C<Test::*> will be in scope.
+Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the
+module in question, namely, that C<Test::*> will be in scope.
 
 However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
 the compile tests are to make sure the modules load.
 
-So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the much more proven C<[Test::Compile]>.
+So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the
+much more proven C<[Test::Compile]>.
 
-Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour, the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to decrease them, that would be an approach counter-productive to this modules purpose.
+Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour,
+the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to
+decrease them, that would be an approach counter-productive to this modules purpose.
 
 =head1 METHODS
 
 =head2 C<gather_files>
 
-This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only happens at this phase.
+This plugin operates B<ONLY> during C<gather_files>, unlike other plugins which have multiple phase involvement, this only
+happens at this phase.
 
-The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given file,
-the test itself must be included B<after> that file is gathered.
+The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given
+file, the test itself must be included B<after> that file is gathered.
 
 =head1 ATTRIBUTES
 
@@ -529,7 +855,8 @@ Provided Templates:
 
 =item * C<01-basic.t.tpl>
 
-A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing else.
+A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing
+else.
 
 =back
 
@@ -572,7 +899,9 @@ Under the hood, C<Test::Compile> is really file oriented too, it just doesn't gi
 It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
 no illusions as to what it can, and cannot do.
 
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't be automatically resolved to files )
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are
+miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't
+be automatically resolved to files )
 
 =head1 Performance
 
@@ -605,7 +934,7 @@ Kent Fredric <kentfredric@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Kent Fredric <kentfredric@gmail.com>.
+This software is copyright (c) 2014 by Kent Fredric <kentfredric@gmail.com>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
