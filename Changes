@@ -4,12 +4,18 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  [00 Major]
  - Toolking Switched to EUMM.soft
 
+ [Dependencies::Aggregate]
+ - 5.008 : 199 → 202
+ - 5.010 : 177 → 182
+ - 5.019 : 161 → 160
+
  [Dependencies::Stats]
  - Dependencies changed since 0.001001, see Changes.deps{,.all,.dev} for
    details
  - build: -1
  - configure: +2 -1 (recommends: +1)
  - develop: +7 ↑1 -9
+ - runtime: +1 ↑1
  - test: +4 ↓1 (recommends: +4)
 
 0.001001 2013-11-13T10:47:34Z
