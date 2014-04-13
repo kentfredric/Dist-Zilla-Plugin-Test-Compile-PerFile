@@ -9,7 +9,7 @@ $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.002000';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
-use Moose;
+use Moose qw( with around has );
 use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
@@ -588,6 +588,7 @@ sub _found_files {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+no Moose::Util::TypeConstraints;
 
 1;
 
