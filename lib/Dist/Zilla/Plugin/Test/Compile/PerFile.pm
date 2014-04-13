@@ -437,13 +437,13 @@ sub _generate_file {
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
         test_more_version => '0.89',
-      }
+      },
     );
   };
   return Dist::Zilla::File::FromCode->new(
     name             => $name,
     code_return_type => 'text',
-    code             => $code
+    code             => $code,
   );
 }
 
@@ -579,7 +579,7 @@ sub _vivify_installmodules_pm_finder {
         return 1 if $_ eq $self->zilla->main_module;
         return;
       },
-    }
+    },
   );
   push @{ $self->zilla->plugins }, $plugin;
   return $plugin;
