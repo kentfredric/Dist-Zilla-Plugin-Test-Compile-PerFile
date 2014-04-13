@@ -1,5 +1,9 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.001002 2014-04-13T02:51:10Z
+ [00 Major]
+ - Toolking Switched to EUMM.soft
+
 0.001001 2013-11-13T10:47:34Z
  [00 Bugfix]
  - Fix sort order of files in metadata
@@ -19,6 +23,13 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
  [Dependencies::Removed / develop requires]
  - Dist::Zilla::Plugin::Test::Compile
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.001000, see Changes.deps{,.all,.dev} for
+   details
+ - build: ↑1
+ - configure: ↑1
+ - develop: +1 ↑1 -1
 
 0.001000 2013-11-11T09:33:58Z
  - First version. Not feature compatible with Test::Compile

@@ -2,19 +2,162 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
-BEGIN {
-  $Dist::Zilla::Plugin::Test::Compile::PerFile::AUTHORITY = 'cpan:KENTNL';
-}
-{
-  $Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001001';
-}
-
+$Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.001002';
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
 use Moose;
 use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 use Path::Tiny qw(path);
@@ -100,6 +243,13 @@ around dump_config => sub {
 };
 
 
+
+
+
+
+
+
+
 sub BUILD {
   my ($self) = @_;
   return if $self->has_file;
@@ -107,6 +257,150 @@ sub BUILD {
   $self->_finder_objects;
   return;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -139,6 +433,14 @@ sub _generate_file {
     code             => $code
   );
 }
+
+
+
+
+
+
+
+
 
 
 sub gather_files {
@@ -297,7 +599,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.001001
+version 0.001002
 
 =head1 SYNOPSIS
 
@@ -605,7 +907,7 @@ Kent Fredric <kentfredric@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Kent Fredric <kentfredric@gmail.com>.
+This software is copyright (c) 2014 by Kent Fredric <kentfredric@gmail.com>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
