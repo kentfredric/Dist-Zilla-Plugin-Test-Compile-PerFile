@@ -20,7 +20,7 @@ dir = share
 
 
 [@Author::KENTNL]
-:version          = 2.013
+:version          = 2.016
 git_versions      = 1
 normal_form       = numify
 mantissa          = 6
