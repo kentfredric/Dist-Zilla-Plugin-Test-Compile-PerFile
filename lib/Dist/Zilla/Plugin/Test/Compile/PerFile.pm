@@ -5,6 +5,8 @@ use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
+our $VERSION = '0.002001';
+
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
 # AUTHORITY
@@ -504,7 +506,7 @@ sub _build_prefix {
 }
 
 sub _build_path_translator {
-  my (undef,) = @_;
+  my ( undef, ) = @_;
   return 'base64_filter';
 }
 
