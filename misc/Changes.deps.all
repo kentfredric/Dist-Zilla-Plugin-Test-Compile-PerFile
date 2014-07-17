@@ -1,4 +1,29 @@
-0.002000
+This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL dependencies for all phases (configure/build/runtime/test/develop)
+
+0.002001
+ [Added / test recommends]
+ - CPAN::Meta::Prereqs
+
+ [Added / test requires]
+ - File::Spec
+ - Scalar::Util
+
+ [Changed / configure recommends]
+ - ExtUtils::MakeMaker 6.96 → 6.98
+
+ [Changed / configure requires]
+ - File::ShareDir::Install 0.03 → 0.06
+
+ [Changed / develop requires]
+ - Dist::Zilla::PluginBundle::Author::KENTNL 2.013003 → 2.016004
+
+ [Changed / test recommends]
+ - ExtUtils::MakeMaker 6.96 → 6.98
+
+ [Changed / test requires]
+ - version 0 → 0.77
+
+0.002000 2014-04-13T03:23:15Z
  [Added / configure recommends]
  - ExtUtils::MakeMaker 6.96
 
