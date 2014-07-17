@@ -1,19 +1,23 @@
-0.002000
- [Added / configure recommends]
- - ExtUtils::MakeMaker 6.96
+This file contains changes in REQUIRED dependencies for standard CPAN phases (configure/build/runtime/test)
 
+0.002001
+ [Added / test requires]
+ - File::Spec
+ - Scalar::Util
+
+ [Changed / configure requires]
+ - File::ShareDir::Install 0.03 → 0.06
+
+ [Changed / test requires]
+ - version 0 → 0.77
+
+0.002000 2014-04-13T03:23:15Z
  [Added / configure requires]
  - ExtUtils::MakeMaker 6.30
  - File::ShareDir::Install 0.03
 
  [Added / runtime requires]
  - utf8
-
- [Added / test recommends]
- - CPAN::Meta
- - CPAN::Meta::Requirements 2.120900
- - ExtUtils::MakeMaker 6.96
- - Test::More 1.001003
 
  [Added / test requires]
  - ExtUtils::MakeMaker

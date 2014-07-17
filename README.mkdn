@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 # VERSION
 
-version 0.002000
+version 0.002001
 
 # SYNOPSIS
 
@@ -23,7 +23,7 @@ This lead to the realization that implementing said functions are kinda messy.
 However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is
 rather not very portable, so parallelism should only be enabled when asked for.
 
-And this lead to the realization that `prove` and `Test::Harness` __ALREADY__ implement parallelism, and __ALREADY__ provide a
+And this lead to the realization that `prove` and `Test::Harness` **ALREADY** implement parallelism, and **ALREADY** provide a
 safe way for platforms to indicate parallelism is wanted.
 
 Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy
@@ -59,10 +59,10 @@ One initial concern cropped up on the notion of having excessive numbers of `per
      |
      \ ----- 01_basic.t
 
-If we were to implement it this way, we'd have the fun overhead of having to spawn __2__ `perl` instances
+If we were to implement it this way, we'd have the fun overhead of having to spawn **2** `perl` instances
 per module tested, which on `Win32`, would roughly double the test time and give nothing in return.
 
-However, __Most__ of the reason for having a `perl` process per compile, was to separate the modules from each other
+However, **Most** of the reason for having a `perl` process per compile, was to separate the modules from each other
 to assure they could be loaded independently.
 
 So because we already have a basically empty compile-state per test, we can reduce the number of `perl` processes to as many
@@ -92,27 +92,27 @@ decrease them, that would be an approach counter-productive to this modules purp
 
 ## `gather_files`
 
-This plugin operates __ONLY__ during `gather_files`, unlike other plugins which have multiple phase involvement, this only
+This plugin operates **ONLY** during `gather_files`, unlike other plugins which have multiple phase involvement, this only
 happens at this phase.
 
 The intrinsic dependence of this plugin on other files in your dist, means that in order for it to generate a test for any given
-file, the test itself must be included __after__ that file is gathered.
+file, the test itself must be included **after** that file is gathered.
 
 # ATTRIBUTES
 
 ## `xt_mode`
 
-_optional_ __`Bool`__
+_optional_ **`Bool`**
 
     xt_mode = 1
 
 If set, `prefix` defaults to `xt/author/00-compile`
 
-_Default_ is __NOT SET__
+_Default_ is **NOT SET**
 
 ## `prefix`
 
-_optional_ __`Str`__
+_optional_ **`Str`**
 
     prefix = t/99-compilerthingys
 
@@ -122,9 +122,9 @@ _Defaults_ to `t/00-compile`
 
 ## `file`
 
-_optional_ __`multivalue_arg`__ __`ArrayRef[Str]`__
+_optional_ **`multivalue_arg`** **`ArrayRef[Str]`**
 
-__`mvp_aliases`__: `files`
+**`mvp_aliases`**: `files`
 
     file = lib/Foo.pm
     file = lib/Bar.pm
@@ -137,7 +137,7 @@ _If not specified_, defaults are populated from the file finder `finder`
 
 ## `skip`
 
-_optional_ __`multivalue_arg`__ __`ArrayRef[Str]`__
+_optional_ **`multivalue_arg`** **`ArrayRef[Str]`**
 
     skip = lib/Foo.pm
 
@@ -145,7 +145,7 @@ Specifies the list of source files to skip compile tests for.
 
 ## `finder`
 
-_optional_ __`multivalue_arg`__ __`ArrayRef[Str]`__
+_optional_ **`multivalue_arg`** **`ArrayRef[Str]`**
 
     finder = :InstallModules
 
@@ -156,7 +156,7 @@ _If not specified_, a custom one is autovivified, and matches only `*.pm` in `li
 
 ## `path_translator`
 
-_optional_ __`Str`__
+_optional_ **`Str`**
 
 A Name of a routine to translate source paths ( i.e: Paths to modules/scripts that are to be compiled )
 into test file names.
