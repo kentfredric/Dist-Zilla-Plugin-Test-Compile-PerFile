@@ -4,7 +4,9 @@ use warnings;
 use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
-$Dist::Zilla::Plugin::Test::Compile::PerFile::VERSION = '0.002000';
+
+our $VERSION = '0.002001';
+
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
@@ -504,7 +506,7 @@ sub _build_prefix {
 }
 
 sub _build_path_translator {
-  my (undef,) = @_;
+  my ( undef, ) = @_;
   return 'base64_filter';
 }
 
@@ -614,7 +616,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.002000
+version 0.002001
 
 =head1 SYNOPSIS
 

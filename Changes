@@ -1,5 +1,15 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.002001 2014-07-17T23:32:23Z
+ [00 Trivial]
+ - Misc packaging cleanups
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.002000, see misc/*.deps* for details
+ - configure: ↑1 (recommends: ↑1)
+ - develop: +3 -3 (suggests: +2 -1)
+ - test: +2 ↑1 (recommends: +1 ↑1)
+
 0.002000 2014-04-13T03:23:15Z
  [00 Major]
  - Toolking Switched to EUMM.soft
@@ -10,8 +20,7 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  - 5.019 : 161 → 160
 
  [Dependencies::Stats]
- - Dependencies changed since 0.001001, see Changes.deps{,.all,.dev} for
-   details
+ - Dependencies changed since 0.001001, see misc/*.deps* for details
  - build: -1
  - configure: +2 -1 (recommends: +1)
  - develop: +7 ↑1 -9
@@ -24,8 +33,7 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  - Properly remove indirect develop dependence on Test::Compile
 
  [Dependencies::Stats]
- - Dependencies changed since 0.001000, see Changes.deps{,.all,.dev} for
-   details
+ - Dependencies changed since 0.001000, see misc/*.deps* for details
  - build: ↑1
  - configure: ↑1
  - develop: +1 ↑1 -1
