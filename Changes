@@ -1,5 +1,7 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.002002 2014-07-18T02:28:09Z
+
 0.002001 2014-07-17T23:32:23Z
  [00 Trivial]
  - Misc packaging cleanups
