@@ -16,166 +16,6 @@ use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 
-=head1 SYNOPSIS
-
-    ; in dist.ini
-    [Test::Compile::PerFile]
-
-=head1 DESCRIPTION
-
-This module is inspired by its earlier sibling L<< C<[Test::Compile]>|Dist::Zilla::Plugin::Test::Compile >>.
-
-Test::Compile is awesome, however, in the process of its development, we discovered it might be useful
-to run compilation tests in parallel.
-
-This lead to the realization that implementing said functions are kinda messy.
-
-However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is
-rather not very portable, so parallelism should only be enabled when asked for.
-
-And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a
-safe way for platforms to indicate parallelism is wanted.
-
-Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy
-parallelism-induced bugs )
-
-So, here is the Test::Compile model based on how development is currently proceeding.
-
-    prove
-      \ ----- 00_compile.t
-     |           \ ----- Compile Module 1
-     |           \ ----- Compile Module 2
-     |
-     \ ----- 01_basic.t
-
-That may be fine for some people, but this approach has several fundamental limits:
-
-=over 4
-
-=item 1. Sub-Tasks of compile don't get load balanced by the master harness.
-
-=item 2. Parallelism is developer side, not deployment side governed.
-
-=item 3. This approach means C<prove -s> will have no impact.
-
-=item 4. This approach means C<prove -j> will have no impact.
-
-=item 5. This approach inhibits other features of C<prove> such as the C<--state=slow>
-
-=back
-
-So this variation aims to employ one test file per module, to leverage C<prove> power.
-
-One initial concern cropped up on the notion of having excessive numbers of C<perl> instances, e.g:
-
-    prove
-      \ ----- 00_compile/01_Module_1.t
-     |           \ ----- Compile Module 1
-     |
-      \ ----- 00_compile/02_Module_2.t
-     |           \ ----- Compile Module 2
-     |
-     \ ----- 01_basic.t
-
-
-If we were to implement it this way, we'd have the fun overhead of having to spawn B<2> C<perl> instances
-per module tested, which on C<Win32>, would roughly double the test time and give nothing in return.
-
-However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
-to assure they could be loaded independently.
-
-So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many
-modules as we have.
-
-    prove
-      \ ----- 00_compile/01_Module_1.t
-     |
-      \ ----- 00_compile/02_Module_2.t
-     |
-     \ ----- 01_basic.t
-
-
-Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the
-module in question, namely, that C<Test::*> will be in scope.
-
-However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
-the compile tests are to make sure the modules load.
-
-So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the
-much more proven C<[Test::Compile]>.
-
-Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour,
-the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to
-decrease them, that would be an approach counter-productive to this modules purpose.
-
-=head1 Other Important Differences to Test::Compile
-
-=head2 Finders useful, but not required
-
-C<[Test::Compile::PerFile]> supports providing an arbitrary list of files to generate compile tests
-
-    [Test::Compile::PerFile]
-    file = lib/Foo.pm
-    file = lib/Quux.pm
-
-Using this will supersede using finders to find things.
-
-=head2 Single finder only, not multiple
-
-C<[Test::Compile]> supports 2 finder keys, C<module_finder> and C<script_finder>.
-
-This module only supports one key, C<finder>, and it is expected
-that if you want to test 2 different sets of files, you'll create a separate instance for that:
-
-    -[Test::Compile]
-    -module_finder = Foo
-    -script_finder = bar
-    +[Test::Compile::PerFile / module compile tests]
-    +finder = Foo
-    +[Test::Compile::PerFile / script compile tests]
-    +finder = bar
-
-This is harder to do with C<[Test::Compile]>, because you'd have to declare a separate file name for it to work,
-where-as C<[Test::Compile::PerFile]> generates a unique file name for each source it tests.
-
-Collisions are still possible, but harder to hit by accident.
-
-=head2 File Oriented, not Module Oriented
-
-Under the hood, C<Test::Compile> is really file oriented too, it just doesn't give that impression on the box.
-
-It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
-no illusions as to what it can, and cannot do.
-
-( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are
-miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't
-be automatically resolved to files )
-
-=head1 Performance
-
-A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical C<CPUs> I have:
-
-    Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
-    Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
-
-So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in C<tar.gz> size.
-
-Hmm, that's a pretty serious trade off. Might not really be worth the savings.
-
-Though, comparing compile tests alone:
-
-    # Test::Compile
-    prove -j4lr --timer t/00-compile.t
-    Files=1, Tests=135, 41 wallclock secs ( 0.07 usr  0.01 sys + 36.82 cusr  3.58 csys = 40.48 CPU)
-
-    # Test::Compile::PerFile
-    prove -j4lr --timer t/00-compile/
-    Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
-
-That's not bad, considering that although I have 4 logical C<CPUs>, that's really just 2 physical C<CPUs> with hyper-threading ;)
-
-=cut
-
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
@@ -284,6 +124,8 @@ I<Default> is B<NOT SET>
 
 =cut
 
+has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
+
 =attr C<prefix>
 
 I<optional> B<< C<Str> >>
@@ -295,6 +137,8 @@ If set, sets the prefix path for generated tests to go in.
 I<Defaults> to C<t/00-compile>
 
 =cut
+
+has prefix => ( is => ro =>, isa => Str =>, lazy_build => 1 );
 
 =attr C<file>
 
@@ -311,6 +155,10 @@ Specifies the list of source files to generate compile tests for.
 
 I<If not specified>, defaults are populated from the file finder C<finder>
 
+=cut
+
+has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
+
 =attr C<skip>
 
 I<optional> B<< C<multivalue_arg> >> B<< C<ArrayRef[Str]> >>
@@ -318,6 +166,10 @@ I<optional> B<< C<multivalue_arg> >> B<< C<ArrayRef[Str]> >>
     skip = lib/Foo.pm
 
 Specifies the list of source files to skip compile tests for.
+
+=cut
+
+has skip => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
 
 =attr C<finder>
 
@@ -329,6 +181,10 @@ Specifies a L<< C<FileFinder>|Dist::Zilla::Role::FileFinder >> plugin name
 to query for a list of files to build compile tests for.
 
 I<If not specified>, a custom one is autovivified, and matches only C<*.pm> in C<lib/>
+
+=cut
+
+has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
 
 =attr C<path_translator>
 
@@ -394,6 +250,10 @@ Though this is not advised, and is only given for an example.
 
 =back
 
+=cut
+
+has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
+
 =attr C<test_template>
 
 Contains the string of the template file you wish to use as a reference point.
@@ -420,13 +280,7 @@ else.
 
 =cut
 
-has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
-has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
-has file   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
-has skip   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
-has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
-has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
-has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
+has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
 
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
@@ -603,3 +457,163 @@ no Moose;
 no Moose::Util::TypeConstraints;
 
 1;
+
+=head1 SYNOPSIS
+
+    ; in dist.ini
+    [Test::Compile::PerFile]
+
+=head1 DESCRIPTION
+
+This module is inspired by its earlier sibling L<< C<[Test::Compile]>|Dist::Zilla::Plugin::Test::Compile >>.
+
+Test::Compile is awesome, however, in the process of its development, we discovered it might be useful
+to run compilation tests in parallel.
+
+This lead to the realization that implementing said functions are kinda messy.
+
+However, a further realization is, that parallelism should not be codified in the test itself, because platform parallelism is
+rather not very portable, so parallelism should only be enabled when asked for.
+
+And this lead to the realization that C<prove> and C<Test::Harness> B<ALREADY> implement parallelism, and B<ALREADY> provide a
+safe way for platforms to indicate parallelism is wanted.
+
+Which means implementing another layer of parallelism is unwanted and unproductive effort ( which may be also filled with messy
+parallelism-induced bugs )
+
+So, here is the Test::Compile model based on how development is currently proceeding.
+
+    prove
+      \ ----- 00_compile.t
+     |           \ ----- Compile Module 1
+     |           \ ----- Compile Module 2
+     |
+     \ ----- 01_basic.t
+
+That may be fine for some people, but this approach has several fundamental limits:
+
+=over 4
+
+=item 1. Sub-Tasks of compile don't get load balanced by the master harness.
+
+=item 2. Parallelism is developer side, not deployment side governed.
+
+=item 3. This approach means C<prove -s> will have no impact.
+
+=item 4. This approach means C<prove -j> will have no impact.
+
+=item 5. This approach inhibits other features of C<prove> such as the C<--state=slow>
+
+=back
+
+So this variation aims to employ one test file per module, to leverage C<prove> power.
+
+One initial concern cropped up on the notion of having excessive numbers of C<perl> instances, e.g:
+
+    prove
+      \ ----- 00_compile/01_Module_1.t
+     |           \ ----- Compile Module 1
+     |
+      \ ----- 00_compile/02_Module_2.t
+     |           \ ----- Compile Module 2
+     |
+     \ ----- 01_basic.t
+
+
+If we were to implement it this way, we'd have the fun overhead of having to spawn B<2> C<perl> instances
+per module tested, which on C<Win32>, would roughly double the test time and give nothing in return.
+
+However, B<Most> of the reason for having a C<perl> process per compile, was to separate the modules from each other
+to assure they could be loaded independently.
+
+So because we already have a basically empty compile-state per test, we can reduce the number of C<perl> processes to as many
+modules as we have.
+
+    prove
+      \ ----- 00_compile/01_Module_1.t
+     |
+      \ ----- 00_compile/02_Module_2.t
+     |
+     \ ----- 01_basic.t
+
+
+Granted, there is still some bleed here, because doing it like this means you have some modules preloaded prior to compiling the
+module in question, namely, that C<Test::*> will be in scope.
+
+However, "testing these modules compile without C<Test::> loaded" is not the real purpose of the compile tests,
+the compile tests are to make sure the modules load.
+
+So this is an acceptable caveat for this module, and if you wish to be distinct from C<Test::*>, then you're encouraged to use the
+much more proven C<[Test::Compile]>.
+
+Though we may eventually provide an option to spawn additional C<perl> processes to more closely mimic C<Test::*>'s behaviour,
+the cost of doing so should not be understated, and as this module exist to attempt to improve efficiency of tests, not to
+decrease them, that would be an approach counter-productive to this modules purpose.
+
+=head1 Other Important Differences to Test::Compile
+
+=head2 Finders useful, but not required
+
+C<[Test::Compile::PerFile]> supports providing an arbitrary list of files to generate compile tests
+
+    [Test::Compile::PerFile]
+    file = lib/Foo.pm
+    file = lib/Quux.pm
+
+Using this will supersede using finders to find things.
+
+=head2 Single finder only, not multiple
+
+C<[Test::Compile]> supports 2 finder keys, C<module_finder> and C<script_finder>.
+
+This module only supports one key, C<finder>, and it is expected
+that if you want to test 2 different sets of files, you'll create a separate instance for that:
+
+    -[Test::Compile]
+    -module_finder = Foo
+    -script_finder = bar
+    +[Test::Compile::PerFile / module compile tests]
+    +finder = Foo
+    +[Test::Compile::PerFile / script compile tests]
+    +finder = bar
+
+This is harder to do with C<[Test::Compile]>, because you'd have to declare a separate file name for it to work,
+where-as C<[Test::Compile::PerFile]> generates a unique file name for each source it tests.
+
+Collisions are still possible, but harder to hit by accident.
+
+=head2 File Oriented, not Module Oriented
+
+Under the hood, C<Test::Compile> is really file oriented too, it just doesn't give that impression on the box.
+
+It just seemed fundamentally less complex to deal only in file paths for this module, as it gives
+no illusions as to what it can, and cannot do.
+
+( For example, by being clearly file oriented, there's no ambiguity of how it will behave when a file name and a module name are
+miss-matching in some way, by simply not caring about the latter , it will also never attempt to probe and load modules that can't
+be automatically resolved to files )
+
+=head1 Performance
+
+A rough comparison on the C<dzil> git tree, with C<HARNESS_OPTIONS=j4:c> where C<4> is the number of logical C<CPUs> I have:
+
+    Test::Compile -            Files= 42, Tests=577, 57 wallclock secs ( 0.32 usr  0.11 sys + 109.29 cusr 11.13 csys = 120.85 CPU)
+    Test::Compile::PerFile -   Files=176, Tests=576, 44 wallclock secs ( 0.83 usr  0.39 sys + 127.34 cusr 13.27 csys = 141.83 CPU)
+
+So a 20% saving for a 300% growth in file count, a 500k growth in unpacked tar size, and a 4k growth in C<tar.gz> size.
+
+Hmm, that's a pretty serious trade off. Might not really be worth the savings.
+
+Though, comparing compile tests alone:
+
+    # Test::Compile
+    prove -j4lr --timer t/00-compile.t
+    Files=1, Tests=135, 41 wallclock secs ( 0.07 usr  0.01 sys + 36.82 cusr  3.58 csys = 40.48 CPU)
+
+    # Test::Compile::PerFile
+    prove -j4lr --timer t/00-compile/
+    Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
+
+That's not bad, considering that although I have 4 logical C<CPUs>, that's really just 2 physical C<CPUs> with hyper-threading ;)
+
+=cut
