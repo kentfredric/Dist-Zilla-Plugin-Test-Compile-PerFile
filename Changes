@@ -1,14 +1,19 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.002002 2014-08-05T09:20:26Z
+0.002002 2014-08-15T20:44:26Z
  [00 Trivial]
- - upate reportversions test
+ - CPANDAY!
+ - no code changes.
+ - tests augmented.
 
  [Dependencies::Stats]
  - Dependencies changed since 0.002001, see misc/*.deps* for details
  - configure: ↓1
  - develop: +1 (suggests: ↑1)
  - test: -4 (recommends: ↑1 -2)
+
+ [Tests]
+ - Update test::reportprereqs
 
 0.002001 2014-07-17T23:32:23Z
  [00 Trivial]
