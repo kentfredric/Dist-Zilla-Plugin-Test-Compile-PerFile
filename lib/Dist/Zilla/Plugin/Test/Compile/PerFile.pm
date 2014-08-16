@@ -5,7 +5,7 @@ use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002002';
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
@@ -15,166 +15,6 @@ use Moose qw( with around has );
 use MooseX::LazyRequire;
 
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
@@ -284,149 +124,163 @@ sub BUILD {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 has xt_mode => ( is => ro =>, isa => Bool =>, lazy_build => 1 );
-has prefix  => ( is => ro =>, isa => Str  =>, lazy_build => 1 );
-has file   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
-has skip   => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build    => 1, );
+
+
+
+
+
+
+
+
+
+
+
+
+
+has prefix => ( is => ro =>, isa => Str =>, lazy_build => 1 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+has file => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
+
+
+
+
+
+
+
+
+
+
+
+has skip => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_build => 1, );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 has finder => ( is => ro =>, isa => 'ArrayRef[Str]', lazy_required => 1, predicate => 'has_finder' );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators ] ), lazy_build => 1 );
-has test_template   => ( is => ro =>, isa => enum( [ sort keys %templates ] ),        lazy_build => 1 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
 
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
@@ -616,7 +470,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.002001
+version 0.002002
 
 =head1 SYNOPSIS
 
@@ -862,6 +716,8 @@ else.
 
 =back
 
+=for Pod::Coverage BUILD
+
 =head1 Other Important Differences to Test::Compile
 
 =head2 Finders useful, but not required
@@ -927,8 +783,6 @@ Though, comparing compile tests alone:
     Files=135, Tests=135, 22 wallclock secs ( 0.58 usr  0.32 sys + 64.45 cusr  6.74 csys = 72.09 CPU)
 
 That's not bad, considering that although I have 4 logical C<CPUs>, that's really just 2 physical C<CPUs> with hyper-threading ;)
-
-=for Pod::Coverage BUILD
 
 =head1 AUTHOR
 
