@@ -45,6 +45,7 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::DZil" => 0,
+    "Test::File::ShareDir::Dist" => 0,
     "Test::More" => "0.89"
   },
   "VERSION" => "0.003000",
@@ -70,6 +71,7 @@ my %FallbackPrereqs = (
   "MooseX::LazyRequire" => 0,
   "Path::Tiny" => 0,
   "Test::DZil" => 0,
+  "Test::File::ShareDir::Dist" => 0,
   "Test::More" => "0.89",
   "strict" => 0,
   "utf8" => 0,

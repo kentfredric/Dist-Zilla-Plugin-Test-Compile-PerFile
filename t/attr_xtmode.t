@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::File::ShareDir::Dist { 'Dist-Zilla-Plugin-Test-Compile-PerFile' => 'share' };
 use Dist::Zilla::Util::Test::KENTNL 1.003002 qw( dztest );
 use Test::DZil qw( simple_ini );
 

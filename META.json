@@ -111,6 +111,7 @@
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
             "Test::DZil" : "0",
+            "Test::File::ShareDir::Dist" : "0",
             "Test::More" : "0.89"
          }
       }
@@ -202,6 +203,7 @@
          "Test::CPAN::Changes" : "0.30",
          "Test::CPAN::Meta" : "0.23",
          "Test::DZil" : "5.020",
+         "Test::File::ShareDir::Dist" : "1.000005",
          "Test::Kwalitee" : "1.22",
          "Test::More" : "1.001006",
          "Test::Pod" : "1.48",

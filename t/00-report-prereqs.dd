@@ -96,6 +96,7 @@ do { my $x = {
                                    'ExtUtils::MakeMaker' => '0',
                                    'File::Spec' => '0',
                                    'Test::DZil' => '0',
+                                   'Test::File::ShareDir::Dist' => '0',
                                    'Test::More' => '0.89'
                                  }
                  }
