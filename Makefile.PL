@@ -29,6 +29,7 @@ my %WriteMakefileArgs = (
     "Dist::Zilla::Plugin::FinderCode" => 0,
     "Dist::Zilla::Role::FileGatherer" => 0,
     "Dist::Zilla::Role::TextTemplate" => 0,
+    "Dist::Zilla::Util::ConfigDumper" => 0,
     "File::ShareDir" => 0,
     "Moose" => 0,
     "Moose::Util::TypeConstraints" => 0,
@@ -43,7 +44,7 @@ my %WriteMakefileArgs = (
     "File::Spec" => 0,
     "Test::More" => "0.89"
   },
-  "VERSION" => "0.002003",
+  "VERSION" => "0.003000",
   "test" => {
     "TESTS" => "t/*.t t/00-compile/*.t"
   }
@@ -55,6 +56,7 @@ my %FallbackPrereqs = (
   "Dist::Zilla::Plugin::FinderCode" => 0,
   "Dist::Zilla::Role::FileGatherer" => 0,
   "Dist::Zilla::Role::TextTemplate" => 0,
+  "Dist::Zilla::Util::ConfigDumper" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::ShareDir" => 0,
   "File::Spec" => 0,

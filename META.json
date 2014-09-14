@@ -87,6 +87,7 @@
             "Dist::Zilla::Plugin::FinderCode" : "0",
             "Dist::Zilla::Role::FileGatherer" : "0",
             "Dist::Zilla::Role::TextTemplate" : "0",
+            "Dist::Zilla::Util::ConfigDumper" : "0",
             "File::ShareDir" : "0",
             "Moose" : "0",
             "Moose::Util::TypeConstraints" : "0",
@@ -114,7 +115,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
          "file" : "lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm",
-         "version" : "0.002003"
+         "version" : "0.003000"
       }
    },
    "release_status" : "stable",
@@ -129,7 +130,7 @@
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile"
       }
    },
-   "version" : "0.002003",
+   "version" : "0.003000",
    "x_BuiltWith" : {
       "modules" : {
          "CPAN::Meta" : "2.142060",
@@ -183,6 +184,7 @@
          "Dist::Zilla::PluginBundle::Author::KENTNL" : "2.020001",
          "Dist::Zilla::Role::FileGatherer" : "5.020",
          "Dist::Zilla::Role::TextTemplate" : "5.020",
+         "Dist::Zilla::Util::ConfigDumper" : "0.003004",
          "ExtUtils::MakeMaker" : "6.98",
          "File::ShareDir" : "1.102",
          "File::ShareDir::Install" : "0.09",
@@ -674,7 +676,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "0.002003-source",
+                  "tag" : "0.003000-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
@@ -745,7 +747,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : "releases",
                   "signed" : 0,
-                  "tag" : "0.002003",
+                  "tag" : "0.003000",
                   "tag_format" : "%v",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
