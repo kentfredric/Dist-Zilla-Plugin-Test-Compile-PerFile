@@ -1,8 +1,11 @@
 This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL dependencies for all phases (configure/build/runtime/test/develop)
 
-0.002003
+0.003000
  [Added / develop requires]
  - Dist::Zilla::Plugin::Author::KENTNL::RecommendFixes 0.001001
+
+ [Added / runtime requires]
+ - Dist::Zilla::Util::ConfigDumper
 
  [Changed / develop requires]
  - Test::Kwalitee 1.12 → 1.21
