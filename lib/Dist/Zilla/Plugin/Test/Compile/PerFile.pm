@@ -26,7 +26,7 @@ our %path_translators;
 
 $path_translators{base64_filter} = sub {
   my ($file) = @_;
-  $file =~ s/[^-\p{PosixAlnum}_]+/_/msxg;
+  $file =~ s/[^-[:alnum:]_]+/_/msxg;
   return $file;
 };
 
