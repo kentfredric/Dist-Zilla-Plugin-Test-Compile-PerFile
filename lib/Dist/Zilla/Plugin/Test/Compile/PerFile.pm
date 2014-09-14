@@ -5,7 +5,7 @@ use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
-our $VERSION = '0.002002';
+our $VERSION = '0.003000';
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
@@ -19,13 +19,14 @@ with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
+use Dist::Zilla::Util::ConfigDumper qw( config_dumper );
 
 ## no critic (ProhibitPackageVars)
 our %path_translators;
 
 $path_translators{base64_filter} = sub {
   my ($file) = @_;
-  $file =~ s/[^-\p{PosixAlnum}_]+/_/msxg;
+  $file =~ s/[^-[:alnum:]_]+/_/msxg;
   return $file;
 };
 
@@ -70,31 +71,22 @@ our %templates = ();
 
 around mvp_multivalue_args => sub {
   my ( $orig, $self, @args ) = @_;
-  return ( 'finder', 'file', 'files', 'skip', $self->$orig(@args) );
+  return ( 'finder', 'file', 'skip', $self->$orig(@args) );
 };
 
 around mvp_aliases => sub {
   my ( $orig, $self, @args ) = @_;
   my $hash = $self->$orig(@args);
   $hash = {} if not defined $hash;
-  $hash->{file} = 'files';
+  $hash->{files} = 'file';
   return $hash;
 };
 
-around dump_config => sub {
-  my ( $orig, $self, @args ) = @_;
-  my $config     = $self->$orig(@args);
-  my $own_config = {};
-  $own_config->{xt_mode}         = $self->xt_mode;
-  $own_config->{prefix}          = $self->prefix;
-  $own_config->{file}            = [ sort @{ $self->file } ];
-  $own_config->{skip}            = $self->skip;
-  $own_config->{finder}          = $self->finder if $self->has_finder;
-  $own_config->{path_translator} = $self->path_translator;
-  $own_config->{test_template}   = $self->test_template;
-  $config->{ q[] . __PACKAGE__ } = $own_config;
-  return $config;
-};
+around dump_config => config_dumper( __PACKAGE__,
+  { attrs => ['finder'] },
+  qw( xt_mode prefix file skip path_translator test_template ),
+  sub { $_[1]->{file} = [ sort @{ $_[0]->file } ] },
+);
 
 
 
@@ -470,7 +462,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.002002
+version 0.003000
 
 =head1 SYNOPSIS
 
@@ -786,7 +778,7 @@ That's not bad, considering that although I have 4 logical C<CPUs>, that's reall
 
 =head1 AUTHOR
 
-Kent Fredric <kentfredric@gmail.com>
+Kent Fredric <kentnl@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -3,7 +3,7 @@ NAME
     each compilable file in a distribution
 
 VERSION
-    version 0.002002
+    version 0.003000
 
 SYNOPSIS
         ; in dist.ini
@@ -323,7 +323,7 @@ Performance
     that's really just 2 physical "CPUs" with hyper-threading ;)
 
 AUTHOR
-    Kent Fredric <kentfredric@gmail.com>
+    Kent Fredric <kentnl@cpan.org>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2014 by Kent Fredric

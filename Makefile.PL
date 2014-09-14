@@ -15,7 +15,7 @@ install_share dist => "share";
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Create a single .t for each compilable file in a distribution",
-  "AUTHOR" => "Kent Fredric <kentfredric\@gmail.com>",
+  "AUTHOR" => "Kent Fredric <kentnl\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0,
     "File::ShareDir::Install" => "0.06"
@@ -29,6 +29,7 @@ my %WriteMakefileArgs = (
     "Dist::Zilla::Plugin::FinderCode" => 0,
     "Dist::Zilla::Role::FileGatherer" => 0,
     "Dist::Zilla::Role::TextTemplate" => 0,
+    "Dist::Zilla::Util::ConfigDumper" => 0,
     "File::ShareDir" => 0,
     "Moose" => 0,
     "Moose::Util::TypeConstraints" => 0,
@@ -39,11 +40,15 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "Capture::Tiny" => 0,
+    "Dist::Zilla::Util::Test::KENTNL" => "1.003002",
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
+    "Test::DZil" => 0,
+    "Test::File::ShareDir::Dist" => 0,
     "Test::More" => "0.89"
   },
-  "VERSION" => "0.002002",
+  "VERSION" => "0.003000",
   "test" => {
     "TESTS" => "t/*.t t/00-compile/*.t"
   }
@@ -51,10 +56,13 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Capture::Tiny" => 0,
   "Dist::Zilla::File::FromCode" => 0,
   "Dist::Zilla::Plugin::FinderCode" => 0,
   "Dist::Zilla::Role::FileGatherer" => 0,
   "Dist::Zilla::Role::TextTemplate" => 0,
+  "Dist::Zilla::Util::ConfigDumper" => 0,
+  "Dist::Zilla::Util::Test::KENTNL" => "1.003002",
   "ExtUtils::MakeMaker" => 0,
   "File::ShareDir" => 0,
   "File::Spec" => 0,
@@ -62,6 +70,8 @@ my %FallbackPrereqs = (
   "Moose::Util::TypeConstraints" => 0,
   "MooseX::LazyRequire" => 0,
   "Path::Tiny" => 0,
+  "Test::DZil" => 0,
+  "Test::File::ShareDir::Dist" => 0,
   "Test::More" => "0.89",
   "strict" => 0,
   "utf8" => 0,
