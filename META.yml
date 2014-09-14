@@ -1,7 +1,7 @@
 ---
 abstract: 'Create a single .t for each compilable file in a distribution'
 author:
-  - 'Kent Fredric <kentfredric@gmail.com>'
+  - 'Kent Fredric <kentnl@cpan.org>'
 build_requires:
   Capture::Tiny: '0'
   Dist::Zilla::Util::Test::KENTNL: '1.003002'
@@ -647,5 +647,3 @@ x_Dist_Zilla:
       is_trial: '0'
     version: '5.020'
 x_authority: cpan:KENTNL
-x_contributors:
-  - 'Kent Fredric <kentnl@cpan.org>'

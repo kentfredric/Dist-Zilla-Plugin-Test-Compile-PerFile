@@ -15,7 +15,7 @@ install_share dist => "share";
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Create a single .t for each compilable file in a distribution",
-  "AUTHOR" => "Kent Fredric <kentfredric\@gmail.com>",
+  "AUTHOR" => "Kent Fredric <kentnl\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0,
     "File::ShareDir::Install" => "0.06"

@@ -778,7 +778,7 @@ That's not bad, considering that although I have 4 logical C<CPUs>, that's reall
 
 =head1 AUTHOR
 
-Kent Fredric <kentfredric@gmail.com>
+Kent Fredric <kentnl@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
