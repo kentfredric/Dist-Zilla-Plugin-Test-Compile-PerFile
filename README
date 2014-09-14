@@ -3,7 +3,7 @@ NAME
     each compilable file in a distribution
 
 VERSION
-    version 0.003000
+    version 0.003001
 
 SYNOPSIS
         ; in dist.ini

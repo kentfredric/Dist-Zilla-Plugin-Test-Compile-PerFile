@@ -1,5 +1,7 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.003001 2014-09-14T14:15:51Z
+
 0.003000 2014-09-14T14:02:09Z
  [Bugfix]
  - Fixed 'file' and 'files' arguments going nowhere due to wrong mvp aliasing.
