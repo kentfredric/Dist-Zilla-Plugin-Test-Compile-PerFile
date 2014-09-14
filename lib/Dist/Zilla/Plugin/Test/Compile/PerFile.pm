@@ -5,7 +5,7 @@ use utf8;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
-our $VERSION = '0.003000';
+our $VERSION = '0.003001';
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 

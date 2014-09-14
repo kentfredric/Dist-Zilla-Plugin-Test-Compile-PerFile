@@ -1,6 +1,8 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
+
+0.003000 2014-09-14T14:02:09Z
  [Bugfix]
  - Fixed 'file' and 'files' arguments going nowhere due to wrong mvp aliasing.
  - use 5.8 compatible posix classes.
