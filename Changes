@@ -8,10 +8,13 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  - Dependencies changed since 0.002002, see misc/*.deps* for details
  - develop: +1 ↑1 (suggests: ↑2)
  - runtime: +1
- - test: (recommends: ↑1)
+ - test: +4 (recommends: ↑1)
 
  [Internals]
  - Implement dump_config with ConfigDumper
+
+ [Tests]
+ - Add reasonably comprehensive feature tests.
 
 0.002002 2014-08-15T21:20:26Z
  [00 Trivial]
