@@ -28,6 +28,7 @@ t/00-report-prereqs.t
 t/attr_file.t
 t/attr_finder.t
 t/attr_path_translator_mimic_source.t
+t/attr_skip.t
 t/attr_xtmode.t
 t/basic.t
 t/failtest.t
