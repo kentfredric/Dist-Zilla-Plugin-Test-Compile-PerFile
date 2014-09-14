@@ -12,7 +12,9 @@ my $t = dztest();
 $t->add_file(
   'dist.ini' => simple_ini(
     ['GatherDir'],    #
-    [ 'Test::Compile::PerFile', { file => ['lib/Good.pm'] } ],    #
+    [ 'Test::Compile::PerFile', { file => ['lib/Good.pm'] } ],
+    ['MetaConfig'],
+    #
   )
 );
 
@@ -28,4 +30,6 @@ $t->build_ok;
 
 $t->test_has_built_file('t/00-compile/lib_Good_pm.t');
 
+note explain $t->builder->log_messages;
+note explain $t->distmeta;
 done_testing;
