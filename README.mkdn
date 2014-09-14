@@ -302,7 +302,7 @@ That's not bad, considering that although I have 4 logical `CPUs`, that's really
 
 # AUTHOR
 
-Kent Fredric <kentfredric@gmail.com>
+Kent Fredric <kentnl@cpan.org>
 
 # COPYRIGHT AND LICENSE
 

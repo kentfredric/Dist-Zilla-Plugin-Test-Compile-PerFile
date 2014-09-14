@@ -13,6 +13,9 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  [Internals]
  - Implement dump_config with ConfigDumper
 
+ [Metadata]
+ - set author = kentnl
+
  [Tests]
  - Add reasonably comprehensive feature tests.
 
