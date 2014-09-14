@@ -83,7 +83,7 @@ around mvp_aliases => sub {
 };
 
 around dump_config => config_dumper( __PACKAGE__,
-  qw( xt_mode prefix file skip finder path_translator test_template ),
+  { attrs => ['finder'] }, qw( xt_mode prefix file skip finder path_translator test_template ),
   sub {
     $_[1]->{file} = [ sort @{ $_[0]->file } ];
   }
