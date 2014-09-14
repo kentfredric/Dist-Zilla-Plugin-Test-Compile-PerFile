@@ -26,6 +26,7 @@ t/00-compile/lib_Dist_Zilla_Plugin_Test_Compile_PerFile_pm.t
 t/00-report-prereqs.dd
 t/00-report-prereqs.t
 t/attr_file.t
+t/attr_finder.t
 t/attr_path_translator_mimic_source.t
 t/attr_xtmode.t
 t/basic.t
