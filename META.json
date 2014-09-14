@@ -424,13 +424,6 @@
                   "skip" : [],
                   "test_template" : "01-basic.t.tpl",
                   "xt_mode" : null
-               },
-               "Dist::Zilla::Util::ConfigDumper" : {
-                  "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
-                     "failed" : [
-                        "finder"
-                     ]
-                  }
                }
             },
             "name" : "@Author::KENTNL/Test::Compile::PerFile",
