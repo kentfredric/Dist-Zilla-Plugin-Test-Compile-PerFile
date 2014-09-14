@@ -1,6 +1,9 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
+ [Bugfix]
+ - Fixed 'file' and 'files' arguments going nowhere due to wrong mvp aliasing.
+
  [Dependencies::Stats]
  - Dependencies changed since 0.002002, see misc/*.deps* for details
  - develop: +1 ↑1 (suggests: ↑2)

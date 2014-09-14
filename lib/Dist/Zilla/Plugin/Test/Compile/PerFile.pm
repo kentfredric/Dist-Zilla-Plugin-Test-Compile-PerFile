@@ -71,14 +71,14 @@ our %templates = ();
 
 around mvp_multivalue_args => sub {
   my ( $orig, $self, @args ) = @_;
-  return ( 'finder', 'file', 'files', 'skip', $self->$orig(@args) );
+  return ( 'finder', 'file', 'skip', $self->$orig(@args) );
 };
 
 around mvp_aliases => sub {
   my ( $orig, $self, @args ) = @_;
   my $hash = $self->$orig(@args);
   $hash = {} if not defined $hash;
-  $hash->{file} = 'files';
+  $hash->{files} = 'file';
   return $hash;
 };
 
