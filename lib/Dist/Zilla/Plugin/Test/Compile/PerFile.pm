@@ -312,13 +312,13 @@ sub gather_files {
   my $prefix = $self->prefix;
   $prefix =~ s{/?\z}{/}msx;
 
-  my $translator = $self->_path_translator;
+  my ($translator) = $self->_path_translator;
 
   if ( not @{ $self->file } ) {
     $self->log_debug('Did not find any files to add tests for, did you add any files yet?');
     return;
   }
-  my $skiplist = {};
+  my ($skiplist) = {};
   for my $skip ( @{ $self->skip } ) {
     $skiplist->{$skip} = 1;
   }
