@@ -8,6 +8,7 @@ This file contains changes in REQUIRED dependencies for standard CPAN phases (co
  - Capture::Tiny
  - Dist::Zilla::Util::Test::KENTNL 1.003002
  - Test::DZil
+ - Test::File::ShareDir::Dist
 
 0.002002 2014-08-15T21:20:26Z
  [Changed / configure requires]

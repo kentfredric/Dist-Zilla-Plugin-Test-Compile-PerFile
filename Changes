@@ -1,6 +1,6 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.003000 2014-09-14T13:50:56Z
+0.003000 2014-09-14T14:02:09Z
  [Bugfix]
  - Fixed 'file' and 'files' arguments going nowhere due to wrong mvp aliasing.
  - use 5.8 compatible posix classes.
@@ -9,7 +9,7 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  - Dependencies changed since 0.002002, see misc/*.deps* for details
  - develop: +1 ↑1 (suggests: ↑2)
  - runtime: +1
- - test: +3 (recommends: ↑1)
+ - test: +4 (recommends: ↑1)
 
  [Internals]
  - Implement dump_config with ConfigDumper

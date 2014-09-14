@@ -11,6 +11,7 @@ This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL depen
  - Capture::Tiny
  - Dist::Zilla::Util::Test::KENTNL 1.003002
  - Test::DZil
+ - Test::File::ShareDir::Dist
 
  [Changed / develop requires]
  - Test::Kwalitee 1.12 → 1.21
