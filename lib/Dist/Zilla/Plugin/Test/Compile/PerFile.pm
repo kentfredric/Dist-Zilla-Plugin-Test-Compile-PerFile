@@ -19,7 +19,6 @@ with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 use Path::Tiny qw(path);
 use File::ShareDir qw(dist_dir);
 use Moose::Util::TypeConstraints qw(enum);
-use Dist::Zilla::Util::ConfigDumper qw( config_dumper );
 
 ## no critic (ProhibitPackageVars)
 our %path_translators;
@@ -82,11 +81,24 @@ around mvp_aliases => sub {
   return $hash;
 };
 
-around dump_config => config_dumper( __PACKAGE__,
-  { attrs => ['finder'] },
-  qw( xt_mode prefix file skip path_translator test_template ),
-  sub { $_[1]->{file} = [ sort @{ $_[0]->file } ] },
-);
+around dump_config => sub {
+  my ( $orig, $self, @args ) = @_;
+  my $config = $self->$orig(@args);
+  my $localconf = $config->{ +__PACKAGE__ } = {};
+
+  $localconf->{finder}          = $self->finder if $self->has_finder;
+  $localconf->{xt_mode}         = $self->xt_mode;
+  $localconf->{prefix}          = $self->prefix;
+  $localconf->{file}            = [ sort @{ $self->file } ];
+  $localconf->{skip}            = $self->skip;
+  $localconf->{path_translator} = $self->path_translator;
+  $localconf->{test_template}   = $self->test_template;
+
+  $localconf->{ q[$] . __PACKAGE__ . '::VERSION' } = $VERSION
+    unless __PACKAGE__ eq ref $self;
+
+  return $config;
+};
 
 =begin Pod::Coverage
 
