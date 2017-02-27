@@ -1,7 +1,7 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
- - New variable "relpath" that includes the file path with "lib" stripped if present.
+ - New variable "relpath" that includes the file path with "lib" stripped if present, or with "./" prepended otherwise.
 
  [Dependencies::Stats]
  - Dependencies changed since 0.003000, see misc/*.deps* for details
