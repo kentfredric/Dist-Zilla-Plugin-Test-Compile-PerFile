@@ -65,4 +65,3 @@ This file contains changes in REQUIRED dependencies for standard CPAN phases (co
 
  [Changed / configure requires]
  - Module::Build 0.4008 → 0.4200
-
