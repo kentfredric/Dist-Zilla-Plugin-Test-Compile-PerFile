@@ -42,7 +42,7 @@ my %WriteMakefileArgs = (
     "File::Spec" => 0,
     "Test::DZil" => 0,
     "Test::File::ShareDir::Dist" => 0,
-    "Test::More" => "0.89"
+    "Test::More" => 0
   },
   "VERSION" => "0.003901",
   "test" => {
@@ -66,7 +66,7 @@ my %FallbackPrereqs = (
   "Path::Tiny" => 0,
   "Test::DZil" => 0,
   "Test::File::ShareDir::Dist" => 0,
-  "Test::More" => "0.89",
+  "Test::More" => 0,
   "strict" => 0,
   "warnings" => 0
 );

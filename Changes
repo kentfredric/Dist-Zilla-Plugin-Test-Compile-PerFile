@@ -1,7 +1,11 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.003901 2017-02-28T03:41:05Z 4d3032a
+0.003901 2017-02-28T03:42:06Z a5e9632
  - New test template 02-raw-require.t
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.003900, see misc/*.deps* for details
+ - test: ↓1
 
 0.003900 2017-02-28T02:09:54Z 61cd404
  - New variable "relpath" that includes the file path with "lib" stripped if present, or with "./" prepended otherwise.

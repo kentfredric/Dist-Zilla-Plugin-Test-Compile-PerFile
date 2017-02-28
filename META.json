@@ -132,7 +132,7 @@
             "File::Spec" : "0",
             "Test::DZil" : "0",
             "Test::File::ShareDir::Dist" : "0",
-            "Test::More" : "0.89",
+            "Test::More" : "0",
             "perl" : "5.006"
          }
       }
@@ -427,7 +427,7 @@
                   "path_translator" : "base64_filter",
                   "prefix" : "t/00-compile",
                   "skip" : [],
-                  "test_template" : "01-basic.t.tpl",
+                  "test_template" : "02-raw-require.t.tpl",
                   "xt_mode" : null
                }
             },

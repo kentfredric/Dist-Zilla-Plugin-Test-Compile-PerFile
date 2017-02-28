@@ -117,7 +117,7 @@ do { my $x = {
                                    'File::Spec' => '0',
                                    'Test::DZil' => '0',
                                    'Test::File::ShareDir::Dist' => '0',
-                                   'Test::More' => '0.89',
+                                   'Test::More' => '0',
                                    'perl' => '5.006'
                                  }
                  }

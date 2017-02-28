@@ -1,9 +1,19 @@
-use strict;
-use warnings;
-
 # This test was generated for <lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm>
 # using by Dist::Zilla::Plugin::Test::Compile::PerFile ( @Author::KENTNL/Test::Compile::PerFile ) version 0.003901
-# with template 01-basic.t.tpl
+# with template 02-raw-require.t.tpl
+my $file = "Dist\/Zilla\/Plugin\/Test\/Compile\/PerFile\.pm";
+my $err;
+{
+  local $@;
+  eval { require $file; 1 } or $err = $@;
+};
 
-use Test::More 0.89 tests => 1;
-require_ok("Dist/Zilla/Plugin/Test/Compile/PerFile.pm");
+if( not defined $err ) {
+  printf "1..1\nok 1 - require %s\n", $file;
+  exit 0;
+}
+printf "1..1\nnot ok 1 - require %s\n", $file;
+for my $line ( split /\n/, $err ) {
+  printf STDERR "# %s\n", $line;
+}
+exit 1;
