@@ -29,6 +29,7 @@ recommends:
   Moose: '2.000'
   Path::Tiny: '0.058'
 requires:
+  B: '0'
   Dist::Zilla::File::FromCode: '0'
   Dist::Zilla::Plugin::FinderCode: '0'
   Dist::Zilla::Role::FileGatherer: '0'

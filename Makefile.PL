@@ -24,6 +24,7 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.006",
   "NAME" => "Dist::Zilla::Plugin::Test::Compile::PerFile",
   "PREREQ_PM" => {
+    "B" => 0,
     "Dist::Zilla::File::FromCode" => 0,
     "Dist::Zilla::Plugin::FinderCode" => 0,
     "Dist::Zilla::Role::FileGatherer" => 0,
@@ -52,6 +53,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "B" => 0,
   "Capture::Tiny" => 0,
   "Dist::Zilla::File::FromCode" => 0,
   "Dist::Zilla::Plugin::FinderCode" => 0,

@@ -1,5 +1,6 @@
 {
    "modules" : {
+      "B" : "1.68",
       "CPAN::Meta" : "2.150010",
       "Capture::Tiny" : "0.46",
       "Dist::Zilla" : "6.008",
