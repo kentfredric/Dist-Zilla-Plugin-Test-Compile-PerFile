@@ -1,6 +1,23 @@
 This file contains changes in REQUIRED dependencies for standard CPAN phases (configure/build/runtime/test)
 
-0.003000
+0.003900
+ [Added / configure requires]
+ - perl 5.006
+
+ [Added / test requires]
+ - perl 5.006
+
+ [Changed / runtime requires]
+ - perl 5.008 → 5.006
+
+ [Removed / runtime requires]
+ - Dist::Zilla::Util::ConfigDumper
+ - utf8
+
+ [Removed / test requires]
+ - Dist::Zilla::Util::Test::KENTNL 1.003002
+
+0.003000 2014-09-14T14:02:09Z
  [Added / runtime requires]
  - Dist::Zilla::Util::ConfigDumper
 
@@ -63,4 +80,3 @@ This file contains changes in REQUIRED dependencies for standard CPAN phases (co
 
  [Changed / configure requires]
  - Module::Build 0.4008 → 0.4200
-
