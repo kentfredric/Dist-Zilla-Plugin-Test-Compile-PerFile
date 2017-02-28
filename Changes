@@ -1,7 +1,11 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.003001 2017-02-27T23:50:35Z a79e847
+0.003001 2017-02-28T01:45:27Z 2bfcd3e
  - New variable "relpath" that includes the file path with "lib" stripped if present, or with "./" prepended otherwise.
+
+ [Bugfix]
+ - Use properly relativized paths to require_ok to avoid bugs with "no . in @INC"
+ - Closes: https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile/issues/2
 
  [Dependencies::Stats]
  - Dependencies changed since 0.003000, see misc/*.deps* for details
