@@ -132,7 +132,7 @@
             "File::Spec" : "0",
             "Test::DZil" : "0",
             "Test::File::ShareDir::Dist" : "0",
-            "Test::More" : "0.89",
+            "Test::More" : "0",
             "perl" : "5.006"
          }
       }
@@ -140,7 +140,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
          "file" : "lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm",
-         "version" : "0.003900"
+         "version" : "0.003901"
       }
    },
    "release_status" : "testing",
@@ -155,7 +155,7 @@
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile"
       }
    },
-   "version" : "0.003900",
+   "version" : "0.003901",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
    },
@@ -186,7 +186,7 @@
                   "$Dist::Zilla::Role::Bootstrap::VERSION" : "1.001003",
                   "distname" : "Dist-Zilla-Plugin-Test-Compile-PerFile",
                   "fallback" : 1,
-                  "try_built" : "1",
+                  "try_built" : null,
                   "try_built_method" : "mtime"
                }
             },
@@ -427,12 +427,12 @@
                   "path_translator" : "base64_filter",
                   "prefix" : "t/00-compile",
                   "skip" : [],
-                  "test_template" : "01-basic.t.tpl",
+                  "test_template" : "02-raw-require.t.tpl",
                   "xt_mode" : null
                }
             },
             "name" : "@Author::KENTNL/Test::Compile::PerFile",
-            "version" : "0.003001"
+            "version" : "0.003901"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Perl::Critic",
@@ -711,7 +711,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003900-source",
+                  "tag" : "0.003901-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v"
                },
@@ -805,7 +805,7 @@
                   "branch" : "releases",
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003900",
+                  "tag" : "0.003901",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },

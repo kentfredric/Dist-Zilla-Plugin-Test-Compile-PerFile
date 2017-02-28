@@ -48,7 +48,7 @@
       "Dist::Zilla::Plugin::RunExtraTests" : "0.029",
       "Dist::Zilla::Plugin::ShareDir" : "6.008",
       "Dist::Zilla::Plugin::Test::CPAN::Changes" : "0.012",
-      "Dist::Zilla::Plugin::Test::Compile::PerFile" : "0.003901",
+      "Dist::Zilla::Plugin::Test::Compile::PerFile" : "0.003902",
       "Dist::Zilla::Plugin::Test::EOL" : "0.19",
       "Dist::Zilla::Plugin::Test::Kwalitee" : "2.12",
       "Dist::Zilla::Plugin::Test::MinimumVersion" : "2.000007",

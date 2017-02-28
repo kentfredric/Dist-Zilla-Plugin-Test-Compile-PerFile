@@ -12,8 +12,6 @@ lib = lib
 
 [Bootstrap::ShareDir::Dist]
 dir = share
-try_built = 1
-
 
 [ShareDir]
 dir = share
@@ -28,6 +26,7 @@ toolkit_hardness  = soft
 twitter_extra_hash_tags = #distzilla
 bumpversions      = 1
 srcreadme         = mkdn
+Test::Compile::PerFile.test_template = 02-raw-require.t.tpl
 
 ; version_major     = 0
 ; version_minor     = 1

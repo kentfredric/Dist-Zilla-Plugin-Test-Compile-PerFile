@@ -4,7 +4,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
-our $VERSION = '0.003900'; # TRIAL
+our $VERSION = '0.003901'; # TRIAL
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
@@ -478,7 +478,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.003900
+version 0.003901
 
 =head1 SYNOPSIS
 

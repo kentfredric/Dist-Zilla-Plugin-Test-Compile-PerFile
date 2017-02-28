@@ -1,7 +1,7 @@
-# This test was generated for <lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm>
-# using by Dist::Zilla::Plugin::Test::Compile::PerFile ( @Author::KENTNL/Test::Compile::PerFile ) version 0.003901
+# This test was generated for <{{$file}}>
+# using by {{ $plugin_module }} ( {{ $plugin_name }} ) version {{ $plugin_version }}
 # with template 02-raw-require.t.tpl
-my $file = "Dist\/Zilla\/Plugin\/Test\/Compile\/PerFile\.pm";
+my $file = "{{ quotemeta($relpath) }}";
 my $err;
 {
   local $@;
