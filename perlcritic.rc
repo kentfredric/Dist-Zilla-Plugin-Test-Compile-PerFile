@@ -342,7 +342,7 @@ private_name_regex = _(?!build_)\w
 
 [TestingAndDebugging::ProhibitNoStrict]
 
-[TestingAndDebugging::ProhibitNoWarnings]
+[-TestingAndDebugging::ProhibitNoWarnings]
 
 [TestingAndDebugging::ProhibitProlongedStrictureOverride]
 

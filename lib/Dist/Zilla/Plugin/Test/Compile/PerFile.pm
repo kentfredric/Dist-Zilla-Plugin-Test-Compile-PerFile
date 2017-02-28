@@ -10,6 +10,12 @@ our $VERSION = '0.003902';
 
 # AUTHORITY
 
+use B ();
+
+BEGIN {
+  ## no critic (ProhibitCallsToUnexportedSubs)
+  *_HAVE_PERLSTRING = defined &B::perlstring ? sub() { 1 } : sub() { 0 };
+}
 use Moose qw( with around has );
 use MooseX::LazyRequire;
 
@@ -285,6 +291,17 @@ else.
 
 has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
 
+sub _quoted {
+  no warnings 'numeric';
+  ## no critic (ProhibitBitwiseOperators,ProhibitCallsToUndeclaredSubs)
+  ## no critic (ProhibitCallsToUnexportedSubs,ProhibitUnusedVarsStricter)
+  !defined $_[0]
+    ? 'undef()'
+    : ( length( ( my $dummy = q[] ) & $_[0] ) && 0 + $_[0] eq $_[0] && $_[0] * 0 == 0 ) ? $_[0]    # numeric detection
+    : _HAVE_PERLSTRING ? B::perlstring( $_[0] )
+    :                    qq["\Q$_[0]\E"];
+}
+
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
   my $relpath = ( $file =~ /\Alib\/(.*)\z/msx ? $1 : q[./] . $file );
@@ -301,6 +318,7 @@ sub _generate_file {
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
         test_more_version => '0.89',
+        quoted            => \&_quoted,
       },
     );
   };
