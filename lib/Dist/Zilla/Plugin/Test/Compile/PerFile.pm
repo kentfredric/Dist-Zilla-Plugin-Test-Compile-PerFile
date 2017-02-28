@@ -276,10 +276,9 @@ has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), laz
 
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
-  my $relpath = $file;
-  if ( $file =~ /\Alib\/(.*)\z/msx ) {
-    $relpath = $1;
-  }
+  my $relpath = ( $file =~ /\Alib\/(.*)\z/msx ? $1 : q[./] . $file );
+
+  $self->log_debug("relpath for $file is: $relpath");
 
   my $code = sub {
     return $self->fill_in_string(
