@@ -2,13 +2,17 @@ This file contains changes in REQUIRED dependencies for standard CPAN phases (co
 
 0.003001
  [Added / configure requires]
- - perl 5.008
+ - perl 5.006
 
  [Added / test requires]
- - perl 5.008
+ - perl 5.006
+
+ [Changed / runtime requires]
+ - perl 5.008 → 5.006
 
  [Removed / runtime requires]
  - Dist::Zilla::Util::ConfigDumper
+ - utf8
 
 0.003000 2014-09-14T14:02:09Z
  [Added / runtime requires]
