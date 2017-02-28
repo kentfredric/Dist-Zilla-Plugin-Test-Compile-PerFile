@@ -276,11 +276,17 @@ has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), laz
 
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
+  my $relpath = $file;
+  if ( $file =~ /\Alib\/(.*)\z/msx ) {
+    $relpath = $1;
+  }
+
   my $code = sub {
     return $self->fill_in_string(
       $self->_test_template_content,
       {
         file              => $file,
+        relpath           => $relpath,
         plugin_module     => $self->meta->name,
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
