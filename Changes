@@ -2,6 +2,7 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
  - New templated helper 'quoted' for escaping strings more sensibly. haarg++
+ - Test templates now use improved quoting.
 
  [Dependencies::Stats]
  - Dependencies changed since 0.003901, see misc/*.deps* for details

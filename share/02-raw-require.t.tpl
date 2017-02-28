@@ -1,7 +1,7 @@
 # This test was generated for <{{$file}}>
 # using by {{ $plugin_module }} ( {{ $plugin_name }} ) version {{ $plugin_version }}
 # with template 02-raw-require.t.tpl
-my $file = "{{ quotemeta($relpath) }}";
+my $file = {{ quoted($relpath) }};
 my $err;
 {
   local $@;
@@ -9,11 +9,9 @@ my $err;
 };
 
 if( not defined $err ) {
-  printf "1..1\nok 1 - require %s\n", $file;
+  print "1..1\nok 1 - require ${file}\n";
   exit 0;
 }
-printf "1..1\nnot ok 1 - require %s\n", $file;
-for my $line ( split /\n/, $err ) {
-  printf STDERR "# %s\n", $line;
-}
+print "1..1\nnot ok 1 - require ${file}\n";
+print STDERR "# ${_}\n" for split /\n/, $err;
 exit 1;
