@@ -4,11 +4,13 @@
 .perltidyrc
 .travis.yml
 Changes
+INSTALL.SKIP
 LICENSE
 MANIFEST
 META.json
 META.yml
 Makefile.PL
+README
 dist.ini
 dist.ini.meta
 lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm
@@ -17,6 +19,7 @@ misc/Changes.deps
 misc/Changes.deps.all
 misc/Changes.deps.dev
 misc/Changes.deps.opt
+misc/built_with.json
 misc/perlcritic.deps
 perlcritic.rc
 share/.keep
@@ -34,10 +37,10 @@ t/failtest.t
 t/oktest.t
 weaver.ini
 xt/author/critic.t
+xt/author/eol.t
 xt/author/pod-coverage.t
 xt/author/pod-syntax.t
 xt/release/cpan-changes.t
 xt/release/distmeta.t
-xt/release/eol.t
 xt/release/kwalitee.t
 xt/release/minimum-version.t
