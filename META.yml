@@ -4,7 +4,6 @@ author:
   - 'Kent Fredric <kentnl@cpan.org>'
 build_requires:
   Capture::Tiny: '0'
-  Dist::Zilla::Util::Test::KENTNL: '1.003002'
   ExtUtils::MakeMaker: '0'
   File::Spec: '0'
   Test::DZil: '0'
