@@ -373,6 +373,10 @@ has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1,
 has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
+no Moose::Util::TypeConstraints;
+
 sub _build_xt_mode {
   return;
 }
@@ -478,9 +482,6 @@ sub _found_files {
   return [ values %by_name ];
 }
 
-__PACKAGE__->meta->make_immutable;
-no Moose;
-no Moose::Util::TypeConstraints;
 
 1;
 
