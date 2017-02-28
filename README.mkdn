@@ -234,6 +234,11 @@ Provided Templates:
     A very basic standard template, which `use`'s `Test::More`, does a `requires_ok($file)` for the requested file, and nothing
     else.
 
+- `02-raw-require.t.tpl`
+
+    A minimalist spartan `require_ok` implementation, but without using `Test::More`. Subsequently faster under Test2 and can expose
+    more issues where modules have implicit `use`
+
 # Other Important Differences to Test::Compile
 
 ## Finders useful, but not required

@@ -285,6 +285,11 @@ Provided Templates:
 A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing
 else.
 
+=item * C<02-raw-require.t.tpl>
+
+A minimalist spartan C<require_ok> implementation, but without using C<Test::More>. Subsequently faster under Test2 and can expose
+more issues where modules have implicit C<use>
+
 =back
 
 =cut
