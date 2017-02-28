@@ -1,6 +1,6 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
-0.003001 2017-02-28T01:45:28Z f4c1b03
+0.003001 2017-02-28T01:45:28Z ef531f6
  - New variable "relpath" that includes the file path with "lib" stripped if present, or with "./" prepended otherwise.
 
  [Bugfix]
@@ -11,7 +11,7 @@ Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
  - Dependencies changed since 0.003000, see misc/*.deps* for details
  - configure: +1 (recommends: +1 ↑1)
  - develop: +17 ↑3 -3 (recommends: +1, suggests: ↑2)
- - runtime: -1 (recommends: +2)
+ - runtime: ↓1 -2 (recommends: +2)
  - test: +1 (recommends: ↑1 ↓1)
 
  [Internals]
