@@ -143,7 +143,7 @@
          "version" : "0.003902"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile/issues"
@@ -328,8 +328,16 @@
          },
          {
             "class" : "Dist::Zilla::Plugin::Author::KENTNL::TravisCI",
+            "config" : {
+               "Dist::Zilla::Plugin::Author::KENTNL::TravisCI" : {
+                  "fail_perls" : [
+                     "5.8"
+                  ],
+                  "skip_perls" : []
+               }
+            },
             "name" : "@Author::KENTNL/Author::KENTNL::TravisCI",
-            "version" : "0.001002"
+            "version" : "0.001003"
          },
          {
             "class" : "Dist::Zilla::Plugin::Author::KENTNL::CONTRIBUTING",
@@ -957,7 +965,7 @@
       "zilla" : {
          "class" : "Dist::Zilla::Dist::Builder",
          "config" : {
-            "is_trial" : 1
+            "is_trial" : 0
          },
          "version" : "6.008"
       }
