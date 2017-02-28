@@ -1,5 +1,5 @@
 # This test was generated for <lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm>
-# using by Dist::Zilla::Plugin::Test::Compile::PerFile ( @Author::KENTNL/Test::Compile::PerFile ) version 0.003901
+# using by Dist::Zilla::Plugin::Test::Compile::PerFile ( @Author::KENTNL/Test::Compile::PerFile ) version 0.003902
 # with template 02-raw-require.t.tpl
 my $file = "Dist\/Zilla\/Plugin\/Test\/Compile\/PerFile\.pm";
 my $err;

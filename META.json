@@ -140,7 +140,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
          "file" : "lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm",
-         "version" : "0.003901"
+         "version" : "0.003902"
       }
    },
    "release_status" : "testing",
@@ -155,7 +155,7 @@
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile"
       }
    },
-   "version" : "0.003901",
+   "version" : "0.003902",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
    },
@@ -432,7 +432,7 @@
                }
             },
             "name" : "@Author::KENTNL/Test::Compile::PerFile",
-            "version" : "0.003901"
+            "version" : "0.003902"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Perl::Critic",
@@ -711,7 +711,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003901-source",
+                  "tag" : "0.003902-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v"
                },
@@ -805,7 +805,7 @@
                   "branch" : "releases",
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003901",
+                  "tag" : "0.003902",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },

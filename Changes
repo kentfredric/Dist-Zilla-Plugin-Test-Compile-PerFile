@@ -1,5 +1,7 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.003902 2017-02-28T04:46:01Z 21cc092
+
 0.003901 2017-02-28T03:42:06Z a5e9632
  - New test template 02-raw-require.t
 
