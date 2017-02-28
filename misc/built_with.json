@@ -61,7 +61,6 @@
       "Dist::Zilla::PluginBundle::Author::KENTNL" : "2.025020",
       "Dist::Zilla::Role::FileGatherer" : "6.008",
       "Dist::Zilla::Role::TextTemplate" : "6.008",
-      "Dist::Zilla::Util::ConfigDumper" : "0.003007",
       "Dist::Zilla::Util::Test::KENTNL" : "1.005013",
       "English" : "1.10",
       "ExtUtils::MakeMaker" : "7.24",
