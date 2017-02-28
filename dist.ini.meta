@@ -12,8 +12,6 @@ lib = lib
 
 [Bootstrap::ShareDir::Dist]
 dir = share
-try_built = 1
-
 
 [ShareDir]
 dir = share

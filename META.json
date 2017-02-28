@@ -186,7 +186,7 @@
                   "$Dist::Zilla::Role::Bootstrap::VERSION" : "1.001003",
                   "distname" : "Dist-Zilla-Plugin-Test-Compile-PerFile",
                   "fallback" : 1,
-                  "try_built" : "1",
+                  "try_built" : null,
                   "try_built_method" : "mtime"
                }
             },
