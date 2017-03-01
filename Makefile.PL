@@ -24,6 +24,7 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.006",
   "NAME" => "Dist::Zilla::Plugin::Test::Compile::PerFile",
   "PREREQ_PM" => {
+    "B" => 0,
     "Dist::Zilla::File::FromCode" => 0,
     "Dist::Zilla::Plugin::FinderCode" => 0,
     "Dist::Zilla::Role::FileGatherer" => 0,
@@ -44,7 +45,7 @@ my %WriteMakefileArgs = (
     "Test::File::ShareDir::Dist" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.003901",
+  "VERSION" => "0.003902",
   "test" => {
     "TESTS" => "t/*.t t/00-compile/*.t"
   }
@@ -52,6 +53,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "B" => 0,
   "Capture::Tiny" => 0,
   "Dist::Zilla::File::FromCode" => 0,
   "Dist::Zilla::Plugin::FinderCode" => 0,

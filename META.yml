@@ -24,11 +24,12 @@ name: Dist-Zilla-Plugin-Test-Compile-PerFile
 provides:
   Dist::Zilla::Plugin::Test::Compile::PerFile:
     file: lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm
-    version: '0.003901'
+    version: '0.003902'
 recommends:
   Moose: '2.000'
   Path::Tiny: '0.058'
 requires:
+  B: '0'
   Dist::Zilla::File::FromCode: '0'
   Dist::Zilla::Plugin::FinderCode: '0'
   Dist::Zilla::Role::FileGatherer: '0'
@@ -45,4 +46,4 @@ resources:
   bugtracker: https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile/issues
   homepage: https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile
   repository: https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile.git
-version: '0.003901'
+version: '0.003902'

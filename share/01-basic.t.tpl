@@ -6,4 +6,4 @@ use warnings;
 # with template 01-basic.t.tpl
 
 use Test::More {{ $test_more_version }} tests => 1;
-require_ok("{{ $relpath }}");
+require_ok({{ quoted($relpath) }});

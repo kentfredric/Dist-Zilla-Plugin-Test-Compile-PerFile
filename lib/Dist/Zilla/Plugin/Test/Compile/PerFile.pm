@@ -4,12 +4,18 @@ use warnings;
 
 package Dist::Zilla::Plugin::Test::Compile::PerFile;
 
-our $VERSION = '0.003901'; # TRIAL
+our $VERSION = '0.003902'; # TRIAL
 
 # ABSTRACT: Create a single .t for each compilable file in a distribution
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
+use B ();
+
+BEGIN {
+  ## no critic (ProhibitCallsToUnexportedSubs)
+  *_HAVE_PERLSTRING = defined &B::perlstring ? sub() { 1 } : sub() { 0 };
+}
 use Moose qw( with around has );
 use MooseX::LazyRequire;
 
@@ -283,7 +289,23 @@ has path_translator => ( is => ro =>, isa => enum( [ sort keys %path_translators
 
 
 
+
+
+
+
+
 has test_template => ( is => ro =>, isa => enum( [ sort keys %templates ] ), lazy_build => 1 );
+
+sub _quoted {
+  no warnings 'numeric';
+  ## no critic (ProhibitBitwiseOperators,ProhibitCallsToUndeclaredSubs)
+  ## no critic (ProhibitCallsToUnexportedSubs,ProhibitUnusedVarsStricter)
+  !defined $_[0]
+    ? 'undef()'
+    : ( length( ( my $dummy = q[] ) & $_[0] ) && 0 + $_[0] eq $_[0] && $_[0] * 0 == 0 ) ? $_[0]    # numeric detection
+    : _HAVE_PERLSTRING ? B::perlstring( $_[0] )
+    :                    qq["\Q$_[0]\E"];
+}
 
 sub _generate_file {
   my ( $self, $name, $file ) = @_;
@@ -301,6 +323,7 @@ sub _generate_file {
         plugin_name       => $self->plugin_name,
         plugin_version    => ( $self->VERSION ? $self->VERSION : '<self>' ),
         test_more_version => '0.89',
+        quoted            => \&_quoted,
       },
     );
   };
@@ -354,6 +377,10 @@ has _path_translator       => ( is => ro =>, isa => CodeRef =>, lazy_build => 1,
 has _test_template         => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _test_template_content => ( is => ro =>, isa => Defined =>, lazy_build => 1, init_arg => undef );
 has _finder_objects => ( is => ro =>, isa => 'ArrayRef', lazy_build => 1, init_arg => undef );
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
+no Moose::Util::TypeConstraints;
 
 sub _build_xt_mode {
   return;
@@ -460,9 +487,6 @@ sub _found_files {
   return [ values %by_name ];
 }
 
-__PACKAGE__->meta->make_immutable;
-no Moose;
-no Moose::Util::TypeConstraints;
 
 1;
 
@@ -478,7 +502,7 @@ Dist::Zilla::Plugin::Test::Compile::PerFile - Create a single .t for each compil
 
 =head1 VERSION
 
-version 0.003901
+version 0.003902
 
 =head1 SYNOPSIS
 
@@ -721,6 +745,11 @@ Provided Templates:
 
 A very basic standard template, which C<use>'s C<Test::More>, does a C<requires_ok($file)> for the requested file, and nothing
 else.
+
+=item * C<02-raw-require.t.tpl>
+
+A minimalist spartan C<require_ok> implementation, but without using C<Test::More>. Subsequently faster under Test2 and can expose
+more issues where modules have implicit C<use>
 
 =back
 
