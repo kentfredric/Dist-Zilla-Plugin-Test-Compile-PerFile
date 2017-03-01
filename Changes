@@ -1,5 +1,7 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
+0.003903 2017-03-01T00:42:40Z a7c5182
+
 0.003902 2017-02-28T23:57:38Z f5d29d9
  - New templated helper 'quoted' for escaping strings more sensibly. haarg++
  - Test templates now use improved quoting.
