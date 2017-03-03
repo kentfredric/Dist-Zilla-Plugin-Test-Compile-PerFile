@@ -141,10 +141,10 @@
    "provides" : {
       "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
          "file" : "lib/Dist/Zilla/Plugin/Test/Compile/PerFile.pm",
-         "version" : "0.003902"
+         "version" : "0.004000"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile/issues"
@@ -156,7 +156,7 @@
          "web" : "https://github.com/kentnl/Dist-Zilla-Plugin-Test-Compile-PerFile"
       }
    },
-   "version" : "0.003902",
+   "version" : "0.004000",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
    },
@@ -223,7 +223,7 @@
                   "include_underscores" : 0
                },
                "Dist::Zilla::Role::MetaProvider::Provider" : {
-                  "$Dist::Zilla::Role::MetaProvider::Provider::VERSION" : "2.002003",
+                  "$Dist::Zilla::Role::MetaProvider::Provider::VERSION" : "2.002004",
                   "inherit_missing" : 1,
                   "inherit_version" : 1,
                   "meta_noindex" : 1
@@ -234,7 +234,7 @@
                }
             },
             "name" : "@Author::KENTNL/MetaProvides::Package",
-            "version" : "2.004002"
+            "version" : "2.004003"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaData::BuiltWith",
@@ -259,7 +259,7 @@
                }
             },
             "name" : "@Author::KENTNL/MetaData::BuiltWith",
-            "version" : "1.004004"
+            "version" : "1.004005"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Contributors",
@@ -441,7 +441,7 @@
                }
             },
             "name" : "@Author::KENTNL/Test::Compile::PerFile",
-            "version" : "0.003902"
+            "version" : "0.003903"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Perl::Critic",
@@ -623,7 +623,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Readme::Brief",
             "name" : "@Author::KENTNL/ShippedReadme",
-            "version" : "0.003000"
+            "version" : "0.003001"
          },
          {
             "class" : "Dist::Zilla::Plugin::ReadmeAnyFromPod",
@@ -720,7 +720,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003902-source",
+                  "tag" : "0.004000-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v"
                },
@@ -814,7 +814,7 @@
                   "branch" : "releases",
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.003902",
+                  "tag" : "0.004000",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },
@@ -857,7 +857,7 @@
                }
             },
             "name" : "@Author::KENTNL/Prereqs::Upgrade",
-            "version" : "0.001000"
+            "version" : "0.001001"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs::Recommend::MatchInstalled",
@@ -966,7 +966,7 @@
       "zilla" : {
          "class" : "Dist::Zilla::Dist::Builder",
          "config" : {
-            "is_trial" : 1
+            "is_trial" : 0
          },
          "version" : "6.008"
       }
