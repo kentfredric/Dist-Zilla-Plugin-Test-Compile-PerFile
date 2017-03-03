@@ -1,6 +1,8 @@
 Release history for Dist-Zilla-Plugin-Test-Compile-PerModule
 
 {{$NEXT}}
+
+0.004000 2017-03-03T06:03:26Z c739100
  - Stable release for changes 0.003900-0.003902
 
  [Highlights]
